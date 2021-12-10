@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ProjectEvalutionSystem.Models.Student>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="card card-custom gutter-b">
+    <div class="card-header border-0">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-chat-1 text-primary"></i>
+            </span>
+            <h3 class="card-label text-primary">
+                Student's Grid View
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a href="/Students/Create" class="btn btn-sm btn-primary">
+                <i class="flaticon2-cube"></i> Add Student
+            </a>
+        </div>
+    </div>
+    <div class="separator separator-solid separator-white opacity-20"></div>
+    <div class="card-body">
+        <div class="container">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmailAddress)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Username)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmailAddress)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Username)
+                        </td>
+                        <td>
+                            @{
+                                if (Convert.ToBoolean(item.IsActive) != null && Convert.ToBoolean(item.IsActive))
+                                {
+                                    <span class="label label-success label-inline mr-2">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-danger label-inline mr-2">In Active</span>
+                                }
+
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                    <a href="/Students/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>
+                                    <a href="/Students/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+
