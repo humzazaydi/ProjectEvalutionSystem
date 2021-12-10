@@ -252,6 +252,7 @@
     <Compile Include="Controllers\AdminsController.cs" />
     <Compile Include="Controllers\AssignmentsController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\EvalutionIndexController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="Models\EvalutionIndex.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EvalutionIndexDTOs\EvalutionIndexDTO.cs" />
     <Compile Include="Models\Student.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -352,6 +354,7 @@
     <Content Include="Content\assets\css\themes\layout\header\menu\dark.min.css" />
     <Content Include="Content\assets\css\themes\layout\header\menu\light.css" />
     <Content Include="Content\assets\css\themes\layout\header\menu\light.min.css" />
+    <Content Include="Content\assets\js\CustomScripts\EvalutionIndex.js" />
     <Content Include="Content\assets\js\CustomScripts\General.js" />
     <Content Include="Content\assets\js\pages\crud\datatables\advanced\column-rendering.js" />
     <Content Include="Content\assets\js\pages\crud\datatables\advanced\column-rendering.min.js" />
@@ -2486,6 +2489,7 @@
     <Content Include="Views\Assignments\Delete.cshtml" />
     <Content Include="Views\Assignments\Edit.cshtml" />
     <Content Include="Views\Assignments\Index.cshtml" />
+    <Content Include="Views\EvalutionIndex\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
