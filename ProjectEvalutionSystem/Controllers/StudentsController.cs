@@ -17,7 +17,7 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Students
         public ActionResult Index()
         {
-            return View(db.Students.ToList());
+            return View(db.Students.Include(x=> x.Teacher).ToList());
         }
 
         // GET: Students/Create
@@ -31,7 +31,7 @@ namespace ProjectEvalutionSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,FullName,EmailAddress,Username,Password,UserRole,IsActive,CreationTimStamp,ModificationTimeStamp")] Student student)
+        public ActionResult Create([Bind(Include = "FullName,EmailAddress,Username,Password,TeacherID,UserRole,IsActive,CreationTimStamp,ModificationTimeStamp")] Student student)
         {
             if (ModelState.IsValid)
             {

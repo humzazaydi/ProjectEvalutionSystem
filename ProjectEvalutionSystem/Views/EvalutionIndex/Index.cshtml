@@ -8,33 +8,61 @@
             Evalution Index
         </h3>
         <div class="card-toolbar">
-            <a href="#" class="btn btn-text-info btn-hover-light-info font-weight-bold mr-2">Evalute Assignment</a>
+            <a href="#" class="btn btn-text-info btn-hover-light-info font-weight-bold mr-2" data-toggle="modal" data-target="#ModalCreateNewEvalution">Evalute Assignment</a>
         </div>
     </div>
-    
+
     <div class="card-body">
-        <table id="kt_datatable" class="table-bordered table table-hover"></table>
+        <div class="row">
+            <div class="col-md-12" style=" overflow: auto">
+                <table id="kt_datatable" class="table-bordered table table-hover" style="min-height:400px"></table>
+            </div>
+        </div>
     </div>
 </div>
 
-@*<div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label>Email address <span class="text-danger">*</span></label>
-            <input type="email" class="form-control" placeholder="Enter email" />
-            <span class="form-text text-muted">We'll never share your email with anyone else.</span>
+<!-- Modal-->
+<div class="modal fade modal-lg" id="ModalCreateNewEvalution" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create new evalution</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ddlstudents">Select Student:</label>
+                            <select id="ddlstudents" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ddlteachers">Select Teacher:</label>
+                            <select id="ddlteachers" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ddlassignments">Select Assignment:</label>
+                            <select id="ddlassignments" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
+            </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="exampleInputPassword1">Password <span class="text-danger">*</span></label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-            <label>Static:</label>
-            <p class="form-control-plaintext text-muted">email@example.com</p>
-        </div>
-    </div>
-</div>*@
+</div>
+@section Scripts{
+    <script src="~/Scripts/CustomScripts/EvalutionIndex.js"></script>
+}

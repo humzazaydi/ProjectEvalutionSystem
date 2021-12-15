@@ -1,8 +1,10 @@
-﻿@model ProjectEvalutionSystem.Models.Student
+﻿@model ProjectEvalutionSystem.Models.StudentTeacher
 
 @{
     ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <div class="card card-custom gutter-b">
     <div class="card-header border-0">
         <div class="card-title">
@@ -17,43 +19,30 @@
     <div class="separator separator-solid separator-white opacity-20"></div>
     <div class="card-body">
         <div class="container">
+
             <dl class="dl-horizontal">
                 <dt>
-                    @Html.DisplayNameFor(model => model.FullName)
+                    @Html.DisplayNameFor(model => model.CreationTimeStamp)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.FullName)
+                    @Html.DisplayFor(model => model.CreationTimeStamp)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.EmailAddress)
+                    @Html.DisplayNameFor(model => model.Student.FullName)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.EmailAddress)
+                    @Html.DisplayFor(model => model.Student.FullName)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Username)
+                    @Html.DisplayNameFor(model => model.Teacher.FullName)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Username)
-                </dd>
-                
-                <dd>
-                    @{
-                        if (Convert.ToBoolean(Model.IsActive) != null && Convert.ToBoolean(Model.IsActive))
-                        {
-                            <span class="label label-success label-inline mr-2">Active</span>
-                        }
-                        else
-                        {
-                            <span class="label label-danger label-inline mr-2">In Active</span>
-                        }
-
-                    }
+                    @Html.DisplayFor(model => model.Teacher.FullName)
                 </dd>
 
             </dl>
@@ -63,10 +52,9 @@
 
                 <div class="form-actions no-color">
                     <input type="submit" value="Remove" class="btn btn-light-danger font-weight-bold" />
-                    <a href="/Students/Index" class="btn btn-outline-secondary font-weight-bold">Back to List</a>
+                    <a href="/StudentTeachers/Index" class="btn btn-outline-secondary font-weight-bold">Back to List</a>
                 </div>
             }
         </div>
     </div>
 </div>
-

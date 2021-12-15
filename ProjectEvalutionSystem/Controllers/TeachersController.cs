@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
@@ -105,6 +106,19 @@ namespace ProjectEvalutionSystem.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetAll()
+        {
+            try
+            {
+                return Json(await db.Teachers.Select(x => new { x.ID, x.FullName }).ToListAsync(),JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

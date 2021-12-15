@@ -29,6 +29,7 @@ namespace ProjectEvalutionSystem.Models
         public virtual DbSet<Assignment> Assignments { get; set; }
         public virtual DbSet<EvalutionIndex> EvalutionIndexes { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<StudentTeacher> StudentTeachers { get; set; }
         public virtual DbSet<Teacher> Teachers { get; set; }
     }
 }

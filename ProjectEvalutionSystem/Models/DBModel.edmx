@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ProjectEvalutionSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ProjectEvalutionSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="ID" />
@@ -51,9 +51,19 @@
           <Property Name="Username" Type="nvarchar" MaxLength="50" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" />
           <Property Name="UserRole" Type="int" />
+          <Property Name="TeacherID" Type="int" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="CreationTimStamp" Type="datetime" />
           <Property Name="ModificationTimeStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="StudentTeachers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentID" Type="int" Nullable="false" />
+          <Property Name="TeacherID" Type="int" Nullable="false" />
+          <Property Name="CreationTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Teacher">
           <Key>
@@ -103,11 +113,48 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Students_Teacher">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
+          <End Role="Students" Type="Self.Students" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Students">
+              <PropertyRef Name="TeacherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentTeachers_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="StudentTeachers" Type="Self.StudentTeachers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="StudentTeachers">
+              <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentTeachers_Teacher">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="StudentTeachers" Type="Self.StudentTeachers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="StudentTeachers">
+              <PropertyRef Name="TeacherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="ProjectEvalutionSystemModelStoreContainer">
           <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Assignments" EntityType="Self.Assignments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EvalutionIndex" EntityType="Self.EvalutionIndex" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentTeachers" EntityType="Self.StudentTeachers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_EvalutionIndex_Assignments" Association="Self.FK_EvalutionIndex_Assignments">
             <End Role="Assignments" EntitySet="Assignments" />
@@ -121,12 +168,55 @@
             <End Role="Teacher" EntitySet="Teacher" />
             <End Role="EvalutionIndex" EntitySet="EvalutionIndex" />
           </AssociationSet>
+          <AssociationSet Name="FK_Students_Teacher" Association="Self.FK_Students_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="Students" EntitySet="Students" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentTeachers_Students" Association="Self.FK_StudentTeachers_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="StudentTeachers" EntitySet="StudentTeachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentTeachers_Teacher" Association="Self.FK_StudentTeachers_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="StudentTeachers" EntitySet="StudentTeachers" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ProjectEvalutionSystemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ProjectEvalutionSystemEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Admins" EntityType="ProjectEvalutionSystemModel.Admin" />
+          <EntitySet Name="Assignments" EntityType="ProjectEvalutionSystemModel.Assignment" />
+          <EntitySet Name="EvalutionIndexes" EntityType="ProjectEvalutionSystemModel.EvalutionIndex" />
+          <EntitySet Name="Students" EntityType="ProjectEvalutionSystemModel.Student" />
+          <EntitySet Name="StudentTeachers" EntityType="ProjectEvalutionSystemModel.StudentTeacher" />
+          <EntitySet Name="Teachers" EntityType="ProjectEvalutionSystemModel.Teacher" />
+          <AssociationSet Name="FK_EvalutionIndex_Assignments" Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments">
+            <End Role="Assignment" EntitySet="Assignments" />
+            <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalutionIndex_Students" Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalutionIndex_Teacher" Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Teacher">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Students_Teacher" Association="ProjectEvalutionSystemModel.FK_Students_Teacher">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="Student" EntitySet="Students" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentTeachers_Students" Association="ProjectEvalutionSystemModel.FK_StudentTeachers_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="StudentTeacher" EntitySet="StudentTeachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentTeachers_Teacher" Association="ProjectEvalutionSystemModel.FK_StudentTeachers_Teacher">
+            <End Role="Teacher" EntitySet="Teachers" />
+            <End Role="StudentTeacher" EntitySet="StudentTeachers" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="ID" />
@@ -149,7 +239,7 @@
           <Property Name="Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsDeleted" Type="Boolean" />
           <Property Name="CreationTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="EvalutionIndexes" Relationship="Self.FK_EvalutionIndex_Assignments" FromRole="Assignments" ToRole="EvalutionIndex" />
+          <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" FromRole="Assignment" ToRole="EvalutionIndex" />
         </EntityType>
         <EntityType Name="EvalutionIndex">
           <Key>
@@ -163,9 +253,9 @@
           <Property Name="StudentID" Type="Int32" />
           <Property Name="TeacherID" Type="Int32" />
           <Property Name="AssignmentID" Type="Int32" />
-          <NavigationProperty Name="Assignment" Relationship="Self.FK_EvalutionIndex_Assignments" FromRole="EvalutionIndex" ToRole="Assignments" />
-          <NavigationProperty Name="Student" Relationship="Self.FK_EvalutionIndex_Students" FromRole="EvalutionIndex" ToRole="Students" />
-          <NavigationProperty Name="Teacher" Relationship="Self.FK_EvalutionIndex_Teacher" FromRole="EvalutionIndex" ToRole="Teacher" />
+          <NavigationProperty Name="Assignment" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" FromRole="EvalutionIndex" ToRole="Assignment" />
+          <NavigationProperty Name="Student" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Students" FromRole="EvalutionIndex" ToRole="Student" />
+          <NavigationProperty Name="Teacher" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Teacher" FromRole="EvalutionIndex" ToRole="Teacher" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -177,10 +267,24 @@
           <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UserRole" Type="Int32" />
+          <Property Name="TeacherID" Type="Int32" />
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="CreationTimStamp" Type="DateTime" Precision="3" />
           <Property Name="ModificationTimeStamp" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="EvalutionIndexes" Relationship="Self.FK_EvalutionIndex_Students" FromRole="Students" ToRole="EvalutionIndex" />
+          <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Students" FromRole="Student" ToRole="EvalutionIndex" />
+          <NavigationProperty Name="Teacher" Relationship="ProjectEvalutionSystemModel.FK_Students_Teacher" FromRole="Student" ToRole="Teacher" />
+          <NavigationProperty Name="StudentTeachers" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Students" FromRole="Student" ToRole="StudentTeacher" />
+        </EntityType>
+        <EntityType Name="StudentTeacher">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentID" Type="Int32" Nullable="false" />
+          <Property Name="TeacherID" Type="Int32" Nullable="false" />
+          <Property Name="CreationTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Student" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Students" FromRole="StudentTeacher" ToRole="Student" />
+          <NavigationProperty Name="Teacher" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Teacher" FromRole="StudentTeacher" ToRole="Teacher" />
         </EntityType>
         <EntityType Name="Teacher">
           <Key>
@@ -193,13 +297,15 @@
           <Property Name="UserRole" Type="Int32" />
           <Property Name="CreationTimeStamp" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="EvalutionIndexes" Relationship="Self.FK_EvalutionIndex_Teacher" FromRole="Teacher" ToRole="EvalutionIndex" />
+          <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Teacher" FromRole="Teacher" ToRole="EvalutionIndex" />
+          <NavigationProperty Name="Students" Relationship="ProjectEvalutionSystemModel.FK_Students_Teacher" FromRole="Teacher" ToRole="Student" />
+          <NavigationProperty Name="StudentTeachers" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Teacher" FromRole="Teacher" ToRole="StudentTeacher" />
         </EntityType>
         <Association Name="FK_EvalutionIndex_Assignments">
-          <End Role="Assignments" Type="Self.Assignment" Multiplicity="0..1" />
-          <End Role="EvalutionIndex" Type="Self.EvalutionIndex" Multiplicity="*" />
+          <End Type="ProjectEvalutionSystemModel.Assignment" Role="Assignment" Multiplicity="0..1" />
+          <End Type="ProjectEvalutionSystemModel.EvalutionIndex" Role="EvalutionIndex" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Assignments">
+            <Principal Role="Assignment">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="EvalutionIndex">
@@ -208,10 +314,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EvalutionIndex_Students">
-          <End Role="Students" Type="Self.Student" Multiplicity="0..1" />
-          <End Role="EvalutionIndex" Type="Self.EvalutionIndex" Multiplicity="*" />
+          <End Type="ProjectEvalutionSystemModel.Student" Role="Student" Multiplicity="0..1" />
+          <End Type="ProjectEvalutionSystemModel.EvalutionIndex" Role="EvalutionIndex" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Students">
+            <Principal Role="Student">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="EvalutionIndex">
@@ -220,8 +326,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EvalutionIndex_Teacher">
-          <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
-          <End Role="EvalutionIndex" Type="Self.EvalutionIndex" Multiplicity="*" />
+          <End Type="ProjectEvalutionSystemModel.Teacher" Role="Teacher" Multiplicity="0..1" />
+          <End Type="ProjectEvalutionSystemModel.EvalutionIndex" Role="EvalutionIndex" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Teacher">
               <PropertyRef Name="ID" />
@@ -231,26 +337,43 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ProjectEvalutionSystemEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Admins" EntityType="Self.Admin" />
-          <EntitySet Name="Assignments" EntityType="Self.Assignment" />
-          <EntitySet Name="EvalutionIndexes" EntityType="Self.EvalutionIndex" />
-          <EntitySet Name="Students" EntityType="Self.Student" />
-          <EntitySet Name="Teachers" EntityType="Self.Teacher" />
-          <AssociationSet Name="FK_EvalutionIndex_Assignments" Association="Self.FK_EvalutionIndex_Assignments">
-            <End Role="Assignments" EntitySet="Assignments" />
-            <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EvalutionIndex_Students" Association="Self.FK_EvalutionIndex_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EvalutionIndex_Teacher" Association="Self.FK_EvalutionIndex_Teacher">
-            <End Role="Teacher" EntitySet="Teachers" />
-            <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        <Association Name="FK_Students_Teacher">
+          <End Type="ProjectEvalutionSystemModel.Teacher" Role="Teacher" Multiplicity="0..1" />
+          <End Type="ProjectEvalutionSystemModel.Student" Role="Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="TeacherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentTeachers_Students">
+          <End Type="ProjectEvalutionSystemModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="ProjectEvalutionSystemModel.StudentTeacher" Role="StudentTeacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="StudentTeacher">
+              <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentTeachers_Teacher">
+          <End Type="ProjectEvalutionSystemModel.Teacher" Role="Teacher" Multiplicity="1" />
+          <End Type="ProjectEvalutionSystemModel.StudentTeacher" Role="StudentTeacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="StudentTeacher">
+              <PropertyRef Name="TeacherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -259,67 +382,78 @@
           <EntitySetMapping Name="Admins">
             <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.Admin">
               <MappingFragment StoreEntitySet="Admin">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
                 <ScalarProperty Name="CreationTimeStamp" ColumnName="CreationTimeStamp" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Assignments">
             <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.Assignment">
               <MappingFragment StoreEntitySet="Assignments">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Path" ColumnName="Path" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="CreationTimeStamp" ColumnName="CreationTimeStamp" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="EvalutionIndexes">
             <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.EvalutionIndex">
               <MappingFragment StoreEntitySet="EvalutionIndex">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="SubmissionDate" ColumnName="SubmissionDate" />
-                <ScalarProperty Name="EvalutionDate" ColumnName="EvalutionDate" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
-                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
                 <ScalarProperty Name="AssignmentID" ColumnName="AssignmentID" />
+                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="EvalutionDate" ColumnName="EvalutionDate" />
+                <ScalarProperty Name="SubmissionDate" ColumnName="SubmissionDate" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Students">
             <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.Student">
               <MappingFragment StoreEntitySet="Students">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CreationTimStamp" ColumnName="CreationTimStamp" />
                 <ScalarProperty Name="ModificationTimeStamp" ColumnName="ModificationTimeStamp" />
+                <ScalarProperty Name="CreationTimStamp" ColumnName="CreationTimStamp" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentTeachers">
+            <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.StudentTeacher">
+              <MappingFragment StoreEntitySet="StudentTeachers">
+                <ScalarProperty Name="CreationTimeStamp" ColumnName="CreationTimeStamp" />
+                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Teachers">
             <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.Teacher">
               <MappingFragment StoreEntitySet="Teacher">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
-                <ScalarProperty Name="CreationTimeStamp" ColumnName="CreationTimeStamp" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreationTimeStamp" ColumnName="CreationTimeStamp" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

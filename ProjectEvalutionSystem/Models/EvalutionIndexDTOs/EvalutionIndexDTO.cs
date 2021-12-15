@@ -7,6 +7,7 @@ namespace ProjectEvalutionSystem.Models.EvalutionIndexDTOs
     {
         public int Id { get; set; }
         public DateTime? EvalutionDate { get; set; }
+        public DateTime? SubmissionDate { get; set; }
         public string Remarks { get; set; }
         public string Comments { get; set; }
         public int? StudentID { get; set; }
@@ -23,6 +24,7 @@ namespace ProjectEvalutionSystem.Models.EvalutionIndexDTOs
             {
                 Id = input.ID,
                 EvalutionDate = input.EvalutionDate,
+                SubmissionDate = input.SubmissionDate,
                 Remarks = input.Remarks,
                 Comments = input.Comments,
                 StudentID = input.StudentID,

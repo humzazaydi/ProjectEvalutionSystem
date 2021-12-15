@@ -61,6 +61,7 @@ var KTLogin = function () {
                     }
                     AjaxCall('/Authentication/Login', JSON.stringify(params), 'POST', onsuccess);
                     function onsuccess(data) {
+                        debugger;
                         if (data.success === true) {
                             location.href = '/Home/Index';
                         } else {

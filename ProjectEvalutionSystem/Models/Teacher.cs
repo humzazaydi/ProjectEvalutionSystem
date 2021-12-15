@@ -18,6 +18,8 @@ namespace ProjectEvalutionSystem.Models
         public Teacher()
         {
             this.EvalutionIndexes = new HashSet<EvalutionIndex>();
+            this.Students = new HashSet<Student>();
+            this.StudentTeachers = new HashSet<StudentTeacher>();
         }
     
         public int ID { get; set; }
@@ -30,5 +32,9 @@ namespace ProjectEvalutionSystem.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EvalutionIndex> EvalutionIndexes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Student> Students { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StudentTeacher> StudentTeachers { get; set; }
     }
 }

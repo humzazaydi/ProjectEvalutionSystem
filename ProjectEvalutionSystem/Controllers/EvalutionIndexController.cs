@@ -44,5 +44,67 @@ namespace ProjectEvalutionSystem.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public async Task<JsonResult> Get(int id)
+        {
+            try
+            {
+                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                {
+                    if (id > 0)
+                    {
+                        return Json(EvalutionIndexDTO.EvalutionIndexConverter(await _context.EvalutionIndexes.FirstOrDefaultAsync(x => x.ID == id)),JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(null, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDropdownDataStudent()
+        {
+            try
+            {
+                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                {
+                    var dataSet = await _context.Students.Select(x => new { x.ID, x.FullName }).ToListAsync();
+                    return Json(dataSet, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetDropdownDataForStudent(int studentID)
+        {
+            try
+            {
+                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                {
+                    var dataSet = await _context.StudentTeachers.Include(x => x.Teacher)
+                        .Where(x => x.ID == studentID).Select(x=> new {x.Teacher.ID, x.Teacher.FullName }).ToListAsync();
+
+
+                    return Json(dataSet, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }
