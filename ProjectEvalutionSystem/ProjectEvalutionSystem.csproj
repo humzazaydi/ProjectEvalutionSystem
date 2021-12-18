@@ -241,13 +241,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConstants.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminsController.cs" />
     <Compile Include="Controllers\AssignmentsController.cs" />
+    <Compile Include="Controllers\AssignmentsTestingController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\ErrorHandlingController.cs" />
     <Compile Include="Controllers\EvalutionIndexController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
@@ -2496,6 +2499,12 @@
     <Content Include="Views\StudentTeachers\Delete.cshtml" />
     <Content Include="Views\StudentTeachers\Edit.cshtml" />
     <Content Include="Views\StudentTeachers\Index.cshtml" />
+    <Content Include="Views\ErrorHandling\Exception.cshtml" />
+    <Content Include="Views\AssignmentsTesting\Create.cshtml" />
+    <Content Include="Views\AssignmentsTesting\Delete.cshtml" />
+    <Content Include="Views\AssignmentsTesting\Details.cshtml" />
+    <Content Include="Views\AssignmentsTesting\Edit.cshtml" />
+    <Content Include="Views\AssignmentsTesting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

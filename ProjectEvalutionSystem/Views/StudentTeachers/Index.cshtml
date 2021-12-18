@@ -31,9 +31,6 @@
                     <th>
                        Teacher
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreationTimeStamp)
-                    </th>
 
                     <th>Actions</th>
                 </tr>
@@ -46,9 +43,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Teacher.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreationTimeStamp)
                 </td>
                 <td>
                     <a href="/StudentTeachers/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>

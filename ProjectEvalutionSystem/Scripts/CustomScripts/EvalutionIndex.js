@@ -1,4 +1,13 @@
 ﻿var EvalutionIndexTable;
+$('#ddlassignments').select2({
+    allowClear: true
+});
+$('#ddlstudents').select2({
+    allowClear: true
+});
+$('#ddlteachers').select2({
+    allowClear: true
+});
 
 var KTDatatableDataLocalDemo = function () {
     // Private functions
@@ -67,7 +76,7 @@ var KTDatatableDataLocalDemo = function () {
                 ],
             });
         }
-        
+
 
         $('#kt_datatable_search_status').on('change', function () {
             datatable.search($(this).val().toLowerCase(), 'Status');
@@ -95,7 +104,6 @@ jQuery(document).ready(function () {
 });
 
 $('#kt_datatable').on('click', 'tr td', function (n) {
-    debugger;
     if (EvalutionIndexTable.row(this).data() !== 'undefined') {
         console.log(EvalutionIndexTable.row(this).data());
         //location.href = '/Consumers/ConsumerDetails/' + parseInt(consumerTable.row(this).data().belongToId);
@@ -108,10 +116,31 @@ function GetDropdownDataStudent() {
         $.each(data, function () {
             $('#ddlstudents').append($("<option     />").val(this.ID).text(this.FullName));
         })
+            $('#ddlstudents').val(null).trigger('change');
     }
 }
-$('#ddlstudents').change(function () {
-    debugger;
+$('#ddlstudents').on("select2:select", function (event) {
+    GetDropdownDataForStudent($('#ddlstudents :selected').val());
+})
+$('#ddlteachers').click(function () {
+    GetDropdownDataForStudent($('#ddlstudents :selected').val());
+})
+
+$('#ddlassignments').on("select2:select", function (event) {
+    $('#txtAssignmentName').text($('#ddlassignments :selected').text() == "" ? "N/A" : $('#ddlassignments :selected').text());
+})
+$('#ddlassignments').on("select2:unselect", function (event) {
+    $('#txtAssignmentName').text($('#ddlassignments :selected').text() == "" ? "N/A" : $('#ddlassignments :selected').text());
+})
+
+$('#ddlteachers').on("select2:select", function (event) {
+    $('#txtTeacherName').text($('#ddlteachers :selected').text() == "" ? "N/A" : $('#ddlteachers :selected').text());
+})
+$('#ddlteachers').on("select2:unselect", function (event) {
+    $('#txtTeacherName').text($('#ddlteachers :selected').text() == "" ? "N/A" : $('#ddlteachers :selected').text());
+})
+
+$('#ddlstudents').on("select2:select", function (event) {
     GetDropdownDataForStudent($('#ddlstudents :selected').val());
 })
 function GetDropdownDataForStudent(id) {
@@ -120,5 +149,46 @@ function GetDropdownDataForStudent(id) {
         $.each(data.teachers, function () {
             $('#ddlteachers').append($("<option     />").val(this.ID).text(this.FullName));
         })
+        $('#ddlteachers').val(null).trigger('change');
+        $.each(data.assignments, function () {
+
+            $('#ddlassignments').append($("<option     />").val(this.ID).text(this.Name));
+        })
+        $('#ddlassignments').val(null).trigger('change');
+    }
+}
+
+$('#btnStartEva').click(function () {
+    if ($('#ddlstudents :selected').text() == "") {
+        toastr.error("Please Select Student");
+    }
+    else if ($('#ddlteachers :selected').text() == "") {
+        toastr.error("Please Select Teacher");
+    }
+    else if ($('#ddlassignments :selected').text() == "") {
+        toastr.error("Please Select Assignment");
+    }
+    else {
+        let url = `/EvalutionIndex/StartEvalution?studentid=${$('#ddlstudents :selected').val()}
+                &teacherid=${$('#ddlteachers :selected').val()}&assignmentid=${$('#ddlassignments :selected').val()}`;
+        AjaxCall(url
+            , null, 'GET',
+            onSuccess
+        )
+        function onSuccess(data) {
+            console.log(data);
+            submitFileToCopyLeaks();
+        }
+    }
+});
+
+function submitFileToCopyLeaks() {
+    var param = {
+        Email : "syedmohammadhumzazaydi@gmail.com",
+        Key : "f9b9e9fb-b2d4-4471-a04c-8ff8b63d4ce6"
+    }
+    AjaxCall(CopyLeaksEndpoint + 'api/CopyleaksDemo/login', JSON.stringify(param), 'POST', onSuccess);
+    function onSuccess(data) {
+        debugger;
     }
 }

@@ -54,29 +54,45 @@ var KTLogin = function () {
 
             validation.validate().then(function (status) {
                 if (status == 'Valid') {
-                    var params = {
-                        EmailAddress: $('#txtEmailAddress').val(),
-                        Password: $('#txtPassword').val(),
-                        whoLogin: $('input[name="options"]:checked').val()
-                    }
-                    AjaxCall('/Authentication/Login', JSON.stringify(params), 'POST', onsuccess);
-                    function onsuccess(data) {
-                        debugger;
-                        if (data.success === true) {
-                            location.href = '/Home/Index';
-                        } else {
-                            swal.fire({
-                                text: "Invalid Email Address or Password",
-                                icon: "error",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn font-weight-bold btn-light-primary"
-                                }
-                            }).then(function () {
-                                KTUtil.scrollTop();
-                            });
+
+                    if ($("input[name=options]:checked").val() != undefined && $("input[name=options]:checked").val() != "") {
+                        var params = {
+                            EmailAddress: $('#txtEmailAddress').val(),
+                            Password: $('#txtPassword').val(),
+                            whoLogin: $('input[name="options"]:checked').val()
                         }
+                        AjaxCall('/Authentication/Login', JSON.stringify(params), 'POST', onsuccess);
+                        function onsuccess(data) {
+                            debugger;
+                            if (data.success === true) {
+                                location.href = '/Home/Index';
+                            } else {
+                                swal.fire({
+                                    text: "Invalid Email Address or Password",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn font-weight-bold btn-light-primary"
+                                    }
+                                }).then(function () {
+                                    KTUtil.scrollTop();
+                                });
+                            }
+                        }
+                    }
+                    else {
+                        swal.fire({
+                            text: "Please Select Login Type First!",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn font-weight-bold btn-light-primary"
+                            }
+                        }).then(function () {
+                            KTUtil.scrollTop();
+                        });
                     }
                 } else {
                     swal.fire({

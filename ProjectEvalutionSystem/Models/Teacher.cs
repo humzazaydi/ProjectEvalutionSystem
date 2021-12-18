@@ -17,6 +17,7 @@ namespace ProjectEvalutionSystem.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Teacher()
         {
+            this.Assignments = new HashSet<Assignment>();
             this.EvalutionIndexes = new HashSet<EvalutionIndex>();
             this.Students = new HashSet<Student>();
             this.StudentTeachers = new HashSet<StudentTeacher>();
@@ -30,6 +31,8 @@ namespace ProjectEvalutionSystem.Models
         public Nullable<System.DateTime> CreationTimeStamp { get; set; }
         public Nullable<bool> IsActive { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Assignment> Assignments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EvalutionIndex> EvalutionIndexes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

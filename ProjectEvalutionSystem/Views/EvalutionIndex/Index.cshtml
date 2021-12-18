@@ -22,8 +22,8 @@
 </div>
 
 <!-- Modal-->
-<div class="modal fade modal-lg" id="ModalCreateNewEvalution" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="ModalCreateNewEvalution" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Create new evalution</h5>
@@ -32,37 +32,46 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="ddlstudents">Select Student:</label>
-                            <select id="ddlstudents" class="form-control">
+                <div class="container">
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <label class="font-weight-bold">Select Student:</label>
+                            <select id="ddlstudents" name="ddlstudents" class="form-control select2" style="width: 100%;">
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="font-weight-bold">Select Teacher: </label>
+                            <select id="ddlteachers" name="ddlteachers" class="form-control select2" style="width: 100%;">
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="font-weight-bold">Select Assignment: </label>
+                            <select id="ddlassignments" name="ddlassignments" class="form-control select2" readonly style="width: 100%;">
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="ddlteachers">Select Teacher:</label>
-                            <select id="ddlteachers" class="form-control">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="ddlassignments">Select Assignment:</label>
-                            <select id="ddlassignments" class="form-control">
-                            </select>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="jumbotron">
+                                <h3 class="font-weight-bold text-muted text-left">Assignment Name: <span class="text-primary" id="txtAssignmentName">N/A</span></h3>
+                                <h3 class="font-weight-bold text-muted text-left">Teacher Name: <span class="text-primary" id="txtTeacherName">N/A</span></h3>
+                                <h3 class="font-weight-bold text-muted text-left">Remarks: <span class="text-success" id="txtRemarks">Pending..</span></h3>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary font-weight-bold">Save changes</button>
+                <button type="button" class="btn btn-success font-weight-bold" id="btnStartEva">Start Evalution...</button>
             </div>
         </div>
     </div>
 </div>
 @section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" 
+            integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" 
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/Scripts/CustomScripts/EvalutionIndex.js"></script>
 }

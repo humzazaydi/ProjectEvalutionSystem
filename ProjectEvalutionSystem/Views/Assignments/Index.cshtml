@@ -36,43 +36,55 @@
                     <th>
                         Status
                     </th>
+                    <th>
+                        Student
+                    </th>
+                    <th>
+                       Teacher
+                    </th>
                     <th>Actions</th>
                 </tr>
 
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Path)
-                        </td>
-                        <td>
-                            @{
-                                if (Convert.ToBoolean(item.IsDeleted) == null && !Convert.ToBoolean(item.IsDeleted))
-                                {
-                                    <span class="label label-danger label-inline mr-2">Deleted</span>
-                                }
-                                else
-                                {
-                                    <span class="label label-success label-inline mr-2">Available</span>
-                                }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Path)
+                </td>
+                <td>
+                    @{
+                        if (Convert.ToBoolean(item.IsDeleted) == null && !Convert.ToBoolean(item.IsDeleted))
+                        {
+                            <span class="label label-danger label-inline mr-2">Deleted</span>
+                        }
+                        else
+                        {
+                            <span class="label label-success label-inline mr-2">Available</span>
+                        }
 
-                            }
-                        </td>
-                        <td>
-                            <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-                                <div class="btn-group mr-2" role="group" aria-label="First group">
-                                    @*<a href="/Assignments/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>*@
-                                    <a href="/Assignments/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Teacher.FullName)
+                </td>
+                <td>
+                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            @*<a href="/Assignments/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>*@
+                            <a href="/Assignments/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
                 }
 
             </table>

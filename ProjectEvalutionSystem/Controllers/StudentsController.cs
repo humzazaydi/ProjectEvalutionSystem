@@ -17,12 +17,22 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Students
         public ActionResult Index()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             return View(db.Students.Include(x=> x.Teacher).ToList());
         }
 
         // GET: Students/Create
         public ActionResult Create()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             return View();
         }
 
@@ -33,6 +43,11 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "FullName,EmailAddress,Username,Password,TeacherID,UserRole,IsActive,CreationTimStamp,ModificationTimeStamp")] Student student)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (ModelState.IsValid)
             {
                 db.Students.Add(student);
@@ -46,6 +61,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Students/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -65,6 +85,11 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,FullName,EmailAddress,Username,Password,UserRole,IsActive,CreationTimStamp,ModificationTimeStamp")] Student student)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (ModelState.IsValid)
             {
                 db.Entry(student).State = EntityState.Modified;
@@ -77,6 +102,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Students/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -94,6 +124,11 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             Student student = db.Students.Find(id);
             db.Students.Remove(student);
             db.SaveChanges();

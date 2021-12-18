@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
 
 namespace ProjectEvalutionSystem.Controllers
-{
+{ 
     public class AssignmentsController : Controller
     {
         private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
@@ -18,12 +18,24 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Assignments
         public ActionResult Index()
         {
-            return View(db.Assignments.ToList());
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
+            return View(db.Assignments.Include(a => a.Student).Include(a => a.Teacher).ToList());
         }
 
         // GET: Assignments/Details/5
         public ActionResult Details(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception","ErrorHandling");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -39,6 +51,14 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Assignments/Create
         public ActionResult Create()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
+            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName");
+            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName");
             return View();
         }
 
@@ -47,14 +67,19 @@ namespace ProjectEvalutionSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Description,Path")] Assignment assignment, HttpPostedFileBase file)
+        public ActionResult Create([Bind(Include = "ID,StudentID,TeacherID,Name,Description,Path")] Assignment assignment, HttpPostedFileBase file)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (ModelState.IsValid)
             {
                 if (file.ContentLength > 0)
                 {
                     string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/App_Data"), _FileName);
+                    string _path = Path.Combine(Server.MapPath("~/App_Data"), _FileName.Trim());
                     file.SaveAs(_path);
                     assignment.Path = _FileName;
                     assignment.IsDeleted = false;
@@ -65,12 +90,21 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Index");
             }
 
+
+            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentID);
+            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.TeacherID);
             return View(assignment);
         }
 
         // GET: Assignments/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -80,6 +114,9 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentID);
+            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.TeacherID);
             return View(assignment);
         }
 
@@ -88,8 +125,14 @@ namespace ProjectEvalutionSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Description,Path")] Assignment assignment, HttpPostedFileBase file)
+        public ActionResult Edit([Bind(Include = "ID,StudentID,TeacherID,Name,Description,Path")] Assignment assignment, HttpPostedFileBase file)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             if (ModelState.IsValid)
             {
                 if (file.ContentLength > 0)
@@ -101,7 +144,7 @@ namespace ProjectEvalutionSystem.Controllers
                         string _pathToBeCheck = string.Empty;
                         if (!string.IsNullOrEmpty(_assignment.Path))
                         {
-                            _pathToBeCheck = Path.Combine(Server.MapPath("~/App_Data"), _assignment.Path);
+                            _pathToBeCheck = Path.Combine(Server.MapPath("~/App_Data"), _assignment.Student.FullName.Trim() + "_" + _assignment.Name.Trim());
                             //Removing Previous Assignments
                             if (System.IO.File.Exists(_pathToBeCheck))
                             {
@@ -121,12 +164,21 @@ namespace ProjectEvalutionSystem.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentID);
+            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.TeacherID);
             return View(assignment);
         }
 
         // GET: Assignments/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -144,6 +196,12 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             Assignment assignment = db.Assignments.Find(id);
             db.Assignments.Remove(assignment);
             db.SaveChanges();

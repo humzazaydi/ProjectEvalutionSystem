@@ -18,6 +18,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: StudentTeachers
         public async Task<ActionResult> Index()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             var studentTeachers = db.StudentTeachers.Include(s => s.Student).Include(s => s.Teacher);
             return View(await studentTeachers.ToListAsync());
         }
@@ -25,6 +30,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: StudentTeachers/Details/5
         public async Task<ActionResult> Details(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -40,6 +50,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: StudentTeachers/Create
         public ActionResult Create()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName");
             ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName");
             return View();
@@ -52,9 +67,13 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ID,StudentID,TeacherID")] StudentTeacher studentTeacher)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (ModelState.IsValid)
             {
-                studentTeacher.CreationTimeStamp = DateTime.Now;
                 db.StudentTeachers.Add(studentTeacher);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -68,6 +87,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: StudentTeachers/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -89,6 +113,11 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "ID,StudentID,TeacherID")] StudentTeacher studentTeacher)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (ModelState.IsValid)
             {
                 db.Entry(studentTeacher).State = EntityState.Modified;
@@ -103,6 +132,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: StudentTeachers/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -120,6 +154,11 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             StudentTeacher studentTeacher = await db.StudentTeachers.FindAsync(id);
             db.StudentTeachers.Remove(studentTeacher);
             await db.SaveChangesAsync();

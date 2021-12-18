@@ -17,7 +17,6 @@ namespace ProjectEvalutionSystem.Models
         public int ID { get; set; }
         public int StudentID { get; set; }
         public int TeacherID { get; set; }
-        public System.DateTime CreationTimeStamp { get; set; }
     
         public virtual Student Student { get; set; }
         public virtual Teacher Teacher { get; set; }

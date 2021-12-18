@@ -8,6 +8,7 @@ function GetStats() {
 
     AjaxCall('/Home/GetStats', null, "GET", onSuccess)
     function onSuccess(data) {
+        debugger;
         $('#totalstudents').prop('Counter', 0).animate({
             Counter: data.students
         }, {

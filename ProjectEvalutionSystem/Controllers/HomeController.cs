@@ -14,6 +14,11 @@ namespace ProjectEvalutionSystem.Controllers
     {
         public ActionResult Index()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
             return View(GetAllAssignmentDetails());
         }
 
