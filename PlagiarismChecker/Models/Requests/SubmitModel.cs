@@ -34,7 +34,7 @@ namespace Copyleaks.SDK.Demo.Models.Requests
 
         public bool Sandbox { get; set; } = false;
 
-        public string Text { get; set; } = "hello world";
+        public string Text { get; set; }
 
         public eProduct Product { get; set; }
 

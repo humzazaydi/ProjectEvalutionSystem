@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using ProjectEvalutionSystem.Helper;
 using ProjectEvalutionSystem.Models;
 using ProjectEvalutionSystem.Models.EvalutionIndexDTOs;
 
@@ -32,14 +37,14 @@ namespace ProjectEvalutionSystem.Controllers
                 using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
                 {
                     var result = await _context.EvalutionIndexes
-                        .Include(x=> x.Student)
+                        .Include(x => x.Student)
                         .Include(x => x.Teacher)
                         .Include(x => x.Assignment)
                         .ToListAsync();
                     if (result.Any())
                     {
                         var ConvertedDTO = result.ConvertAll(EvalutionIndexDTO.EvalutionIndexConverter);
-                        return Json(ConvertedDTO,JsonRequestBehavior.AllowGet);
+                        return Json(ConvertedDTO, JsonRequestBehavior.AllowGet);
                     }
 
                     return Json(null, JsonRequestBehavior.AllowGet);
@@ -60,7 +65,7 @@ namespace ProjectEvalutionSystem.Controllers
                 {
                     if (id > 0)
                     {
-                        return Json(EvalutionIndexDTO.EvalutionIndexConverter(await _context.EvalutionIndexes.FirstOrDefaultAsync(x => x.ID == id)),JsonRequestBehavior.AllowGet);
+                        return Json(EvalutionIndexDTO.EvalutionIndexConverter(await _context.EvalutionIndexes.FirstOrDefaultAsync(x => x.ID == id)), JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
@@ -126,7 +131,7 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
                 {
-                    var Assignment = await _context.Assignments.Include(x=> x.Student).Include(x=> x.Teacher).Where(x => x.ID == assignmentid).FirstOrDefaultAsync();
+                    var Assignment = await _context.Assignments.Include(x => x.Student).Include(x => x.Teacher).Where(x => x.ID == assignmentid).FirstOrDefaultAsync();
                     if (Assignment != null)
                     {
                         //Checking Teacher
@@ -142,17 +147,18 @@ namespace ProjectEvalutionSystem.Controllers
                         DirectoryInfo dir = new DirectoryInfo(Path.Combine(Server.MapPath("~/App_Data/"), Assignment.Path));
                         if (dir.FullName != null)
                         {
-                            return Json(new {message= "ok" }, JsonRequestBehavior.AllowGet);
+                            SeliniumExecution.StartProcess(dir.FullName);
                         }
+                        return Json(new { message = "ok" }, JsonRequestBehavior.AllowGet);
                     }
-                        return null;
                 }
+                return null;
             }
             catch (Exception ex)
             {
 
                 throw;
             }
-        }
+}
     }
 }

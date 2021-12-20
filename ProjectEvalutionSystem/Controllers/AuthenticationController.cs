@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,6 +10,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using ProjectEvalutionSystem.Models;
 using ProjectEvalutionSystem.Models.Auth;
+using RestSharp;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -124,16 +126,14 @@ namespace ProjectEvalutionSystem.Controllers
                     //CopyLeaks Authentication
                     var param = new
                     {
-                        Email = "syedmohammadhumzazaydi@gmail.com",
-                        Key = "f9b9e9fb-b2d4-4471-a04c-8ff8b63d4ce6"
+                        Email = ConfigurationManager.AppSettings["CopyLeaksEmailAddress"],
+                        Key = ConfigurationManager.AppSettings["CopyLeaksAPISecretKey"]
                     };
                     var myContent = JsonConvert.SerializeObject(param);
                     var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
                     var byteContent = new ByteArrayContent(buffer);
                     byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    var response = await client.PostAsync(AppConstants.GetCopyLeaksEndPoint() + "api/CopyleaksDemo/login", byteContent);
-
-                    Session["CopyLeaksInfo"] = response.Content;
+                    Session["CopyLeaksInfo"] = await client.PostAsync(AppConstants.GetCopyLeaksEndPoint() + "api/CopyleaksDemo/login", byteContent);
                 }
             }
             catch (Exception ex)

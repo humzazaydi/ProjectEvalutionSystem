@@ -302,3 +302,14 @@ C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Deb
 C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Debug\ProjectEvalutionSystem.dll
 C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Debug\ProjectEvalutionSystem.pdb
 C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Debug\ProjectEvalutionSystem.csproj.AssemblyReference.cache
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\RestSharp.dll
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\Spire.Doc.dll
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\Spire.License.dll
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\Spire.Pdf.dll
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\WebDriver.dll
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\Microsoft.mshtml.dll
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\RestSharp.xml
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\Spire.Doc.xml
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\Spire.License.xml
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\Spire.Pdf.xml
+C:\Users\Icon\source\repos\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\WebDriver.Support.dll

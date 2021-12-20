@@ -77,8 +77,7 @@ namespace PlagiarismChecker.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, response);
         }
 
-        [HttpPost]
-        [Route("/submit")]
+        [HttpPost("submit")]
         public async Task<IActionResult> Submit(SubmitModel submitModel)
         {
             // A unique scan ID for the scan
@@ -151,8 +150,7 @@ namespace PlagiarismChecker.Controllers
             return scanProperties;
         }
 
-        [HttpPost]
-        [Route("/{scanId}/checkResult")]
+        [HttpPost("CheckResult/{scanId}")]
         public IActionResult CheckResult(string scanId)
         {
             var response = new CheckResultsResponse()
@@ -169,8 +167,7 @@ namespace PlagiarismChecker.Controllers
         /// <param name="scanId">The unique scanID as provided in the 'submit' request</param>
         /// <param name="scanResults">The scan results</param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("/{scanId}/completed")]
+        [HttpPost("CompletedProcess/{scanId}/completed")]
         public IActionResult CompletedProcess(string scanId, [FromBody] CompletedCallback scanResults)
         {
             // Do something with the scan results
