@@ -7,29 +7,17 @@
     <EntitySet Name="Students" EntityType="ProjectEvalutionSystemModel.Student" />
     <EntitySet Name="StudentTeachers" EntityType="ProjectEvalutionSystemModel.StudentTeacher" />
     <EntitySet Name="Teachers" EntityType="ProjectEvalutionSystemModel.Teacher" />
-    <AssociationSet Name="FK_Assignments_Students" Association="ProjectEvalutionSystemModel.FK_Assignments_Students">
-      <End Role="Student" EntitySet="Students" />
-      <End Role="Assignment" EntitySet="Assignments" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Assignments_Teacher" Association="ProjectEvalutionSystemModel.FK_Assignments_Teacher">
-      <End Role="Teacher" EntitySet="Teachers" />
+    <AssociationSet Name="FK_Assignments_StudentTeachers" Association="ProjectEvalutionSystemModel.FK_Assignments_StudentTeachers">
+      <End Role="StudentTeacher" EntitySet="StudentTeachers" />
       <End Role="Assignment" EntitySet="Assignments" />
     </AssociationSet>
     <AssociationSet Name="FK_EvalutionIndex_Assignments" Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments">
       <End Role="Assignment" EntitySet="Assignments" />
       <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
     </AssociationSet>
-    <AssociationSet Name="FK_EvalutionIndex_Students" Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Students">
-      <End Role="Student" EntitySet="Students" />
+    <AssociationSet Name="FK_EvalutionIndex_StudentTeachers" Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_StudentTeachers">
+      <End Role="StudentTeacher" EntitySet="StudentTeachers" />
       <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
-    </AssociationSet>
-    <AssociationSet Name="FK_EvalutionIndex_Teacher" Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Teacher">
-      <End Role="Teacher" EntitySet="Teachers" />
-      <End Role="EvalutionIndex" EntitySet="EvalutionIndexes" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Students_Teacher" Association="ProjectEvalutionSystemModel.FK_Students_Teacher">
-      <End Role="Teacher" EntitySet="Teachers" />
-      <End Role="Student" EntitySet="Students" />
     </AssociationSet>
     <AssociationSet Name="FK_StudentTeachers_Students" Association="ProjectEvalutionSystemModel.FK_StudentTeachers_Students">
       <End Role="Student" EntitySet="Students" />
@@ -57,15 +45,13 @@
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="StudentID" Type="Int32" />
-    <Property Name="TeacherID" Type="Int32" />
+    <Property Name="TeacherStudent" Type="Int32" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Description" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
     <Property Name="Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="IsDeleted" Type="Boolean" />
     <Property Name="CreationTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-    <NavigationProperty Name="Student" Relationship="ProjectEvalutionSystemModel.FK_Assignments_Students" FromRole="Assignment" ToRole="Student" />
-    <NavigationProperty Name="Teacher" Relationship="ProjectEvalutionSystemModel.FK_Assignments_Teacher" FromRole="Assignment" ToRole="Teacher" />
+    <NavigationProperty Name="StudentTeacher" Relationship="ProjectEvalutionSystemModel.FK_Assignments_StudentTeachers" FromRole="Assignment" ToRole="StudentTeacher" />
     <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" FromRole="Assignment" ToRole="EvalutionIndex" />
   </EntityType>
   <EntityType Name="EvalutionIndex">
@@ -77,12 +63,10 @@
     <Property Name="EvalutionDate" Type="DateTime" Precision="3" />
     <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="StudentID" Type="Int32" />
-    <Property Name="TeacherID" Type="Int32" />
     <Property Name="AssignmentID" Type="Int32" />
+    <Property Name="StudentTeacher" Type="Int32" />
     <NavigationProperty Name="Assignment" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" FromRole="EvalutionIndex" ToRole="Assignment" />
-    <NavigationProperty Name="Student" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Students" FromRole="EvalutionIndex" ToRole="Student" />
-    <NavigationProperty Name="Teacher" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Teacher" FromRole="EvalutionIndex" ToRole="Teacher" />
+    <NavigationProperty Name="StudentTeacher1" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_StudentTeachers" FromRole="EvalutionIndex" ToRole="StudentTeacher" />
   </EntityType>
   <EntityType Name="Student">
     <Key>
@@ -94,13 +78,9 @@
     <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="UserRole" Type="Int32" />
-    <Property Name="TeacherID" Type="Int32" />
     <Property Name="IsActive" Type="Boolean" />
     <Property Name="CreationTimStamp" Type="DateTime" Precision="3" />
     <Property Name="ModificationTimeStamp" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Assignments" Relationship="ProjectEvalutionSystemModel.FK_Assignments_Students" FromRole="Student" ToRole="Assignment" />
-    <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Students" FromRole="Student" ToRole="EvalutionIndex" />
-    <NavigationProperty Name="Teacher" Relationship="ProjectEvalutionSystemModel.FK_Students_Teacher" FromRole="Student" ToRole="Teacher" />
     <NavigationProperty Name="StudentTeachers" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Students" FromRole="Student" ToRole="StudentTeacher" />
   </EntityType>
   <EntityType Name="StudentTeacher">
@@ -110,6 +90,8 @@
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="StudentID" Type="Int32" Nullable="false" />
     <Property Name="TeacherID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Assignments" Relationship="ProjectEvalutionSystemModel.FK_Assignments_StudentTeachers" FromRole="StudentTeacher" ToRole="Assignment" />
+    <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_StudentTeachers" FromRole="StudentTeacher" ToRole="EvalutionIndex" />
     <NavigationProperty Name="Student" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Students" FromRole="StudentTeacher" ToRole="Student" />
     <NavigationProperty Name="Teacher" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Teacher" FromRole="StudentTeacher" ToRole="Teacher" />
   </EntityType>
@@ -124,32 +106,17 @@
     <Property Name="UserRole" Type="Int32" />
     <Property Name="CreationTimeStamp" Type="DateTime" Precision="3" />
     <Property Name="IsActive" Type="Boolean" />
-    <NavigationProperty Name="Assignments" Relationship="ProjectEvalutionSystemModel.FK_Assignments_Teacher" FromRole="Teacher" ToRole="Assignment" />
-    <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Teacher" FromRole="Teacher" ToRole="EvalutionIndex" />
-    <NavigationProperty Name="Students" Relationship="ProjectEvalutionSystemModel.FK_Students_Teacher" FromRole="Teacher" ToRole="Student" />
     <NavigationProperty Name="StudentTeachers" Relationship="ProjectEvalutionSystemModel.FK_StudentTeachers_Teacher" FromRole="Teacher" ToRole="StudentTeacher" />
   </EntityType>
-  <Association Name="FK_Assignments_Students">
-    <End Type="ProjectEvalutionSystemModel.Student" Role="Student" Multiplicity="0..1" />
+  <Association Name="FK_Assignments_StudentTeachers">
+    <End Type="ProjectEvalutionSystemModel.StudentTeacher" Role="StudentTeacher" Multiplicity="0..1" />
     <End Type="ProjectEvalutionSystemModel.Assignment" Role="Assignment" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Student">
+      <Principal Role="StudentTeacher">
         <PropertyRef Name="ID" />
       </Principal>
       <Dependent Role="Assignment">
-        <PropertyRef Name="StudentID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Assignments_Teacher">
-    <End Type="ProjectEvalutionSystemModel.Teacher" Role="Teacher" Multiplicity="0..1" />
-    <End Type="ProjectEvalutionSystemModel.Assignment" Role="Assignment" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Teacher">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="Assignment">
-        <PropertyRef Name="TeacherID" />
+        <PropertyRef Name="TeacherStudent" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -165,39 +132,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_EvalutionIndex_Students">
-    <End Type="ProjectEvalutionSystemModel.Student" Role="Student" Multiplicity="0..1" />
+  <Association Name="FK_EvalutionIndex_StudentTeachers">
+    <End Type="ProjectEvalutionSystemModel.StudentTeacher" Role="StudentTeacher" Multiplicity="0..1" />
     <End Type="ProjectEvalutionSystemModel.EvalutionIndex" Role="EvalutionIndex" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Student">
+      <Principal Role="StudentTeacher">
         <PropertyRef Name="ID" />
       </Principal>
       <Dependent Role="EvalutionIndex">
-        <PropertyRef Name="StudentID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_EvalutionIndex_Teacher">
-    <End Type="ProjectEvalutionSystemModel.Teacher" Role="Teacher" Multiplicity="0..1" />
-    <End Type="ProjectEvalutionSystemModel.EvalutionIndex" Role="EvalutionIndex" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Teacher">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="EvalutionIndex">
-        <PropertyRef Name="TeacherID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Students_Teacher">
-    <End Type="ProjectEvalutionSystemModel.Teacher" Role="Teacher" Multiplicity="0..1" />
-    <End Type="ProjectEvalutionSystemModel.Student" Role="Student" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Teacher">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="Student">
-        <PropertyRef Name="TeacherID" />
+        <PropertyRef Name="StudentTeacher" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

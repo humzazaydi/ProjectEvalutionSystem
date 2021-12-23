@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
+using ProjectEvalutionSystem.Models.Auth;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -22,7 +23,7 @@ namespace ProjectEvalutionSystem.Controllers
                 Session["ErrorException"] = "Please Login First";
                 return RedirectToAction("Exception", "ErrorHandling");
             }
-            return View(db.Students.Include(x=> x.Teacher).ToList());
+            return View(db.Students.ToList());
         }
 
         // GET: Students/Create
@@ -50,6 +51,9 @@ namespace ProjectEvalutionSystem.Controllers
             }
             if (ModelState.IsValid)
             {
+                student.UserRole = (int)UserRole.Student;
+                student.CreationTimStamp = DateTime.Now;
+                student.IsActive = true;
                 db.Students.Add(student);
                 db.SaveChanges();
                 return RedirectToAction("Index");

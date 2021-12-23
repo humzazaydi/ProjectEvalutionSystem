@@ -17,8 +17,7 @@
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="StudentID" Type="int" />
-    <Property Name="TeacherID" Type="int" />
+    <Property Name="TeacherStudent" Type="int" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="Description" Type="nvarchar" MaxLength="120" />
     <Property Name="Path" Type="nvarchar(max)" />
@@ -34,9 +33,8 @@
     <Property Name="EvalutionDate" Type="datetime" />
     <Property Name="Remarks" Type="nvarchar(max)" />
     <Property Name="Comments" Type="nvarchar(max)" />
-    <Property Name="StudentID" Type="int" />
-    <Property Name="TeacherID" Type="int" />
     <Property Name="AssignmentID" Type="int" />
+    <Property Name="StudentTeacher" Type="int" />
   </EntityType>
   <EntityType Name="Students">
     <Key>
@@ -48,7 +46,6 @@
     <Property Name="Username" Type="nvarchar" MaxLength="50" />
     <Property Name="Password" Type="nvarchar" MaxLength="50" />
     <Property Name="UserRole" Type="int" />
-    <Property Name="TeacherID" Type="int" />
     <Property Name="IsActive" Type="bit" />
     <Property Name="CreationTimStamp" Type="datetime" />
     <Property Name="ModificationTimeStamp" Type="datetime" />
@@ -73,27 +70,15 @@
     <Property Name="CreationTimeStamp" Type="datetime" />
     <Property Name="IsActive" Type="bit" />
   </EntityType>
-  <Association Name="FK_Assignments_Students">
-    <End Role="Students" Type="Self.Students" Multiplicity="0..1" />
+  <Association Name="FK_Assignments_StudentTeachers">
+    <End Role="StudentTeachers" Type="Self.StudentTeachers" Multiplicity="0..1" />
     <End Role="Assignments" Type="Self.Assignments" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Students">
+      <Principal Role="StudentTeachers">
         <PropertyRef Name="ID" />
       </Principal>
       <Dependent Role="Assignments">
-        <PropertyRef Name="StudentID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Assignments_Teacher">
-    <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
-    <End Role="Assignments" Type="Self.Assignments" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Teacher">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="Assignments">
-        <PropertyRef Name="TeacherID" />
+        <PropertyRef Name="TeacherStudent" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -109,39 +94,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_EvalutionIndex_Students">
-    <End Role="Students" Type="Self.Students" Multiplicity="0..1" />
+  <Association Name="FK_EvalutionIndex_StudentTeachers">
+    <End Role="StudentTeachers" Type="Self.StudentTeachers" Multiplicity="0..1" />
     <End Role="EvalutionIndex" Type="Self.EvalutionIndex" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Students">
+      <Principal Role="StudentTeachers">
         <PropertyRef Name="ID" />
       </Principal>
       <Dependent Role="EvalutionIndex">
-        <PropertyRef Name="StudentID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_EvalutionIndex_Teacher">
-    <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
-    <End Role="EvalutionIndex" Type="Self.EvalutionIndex" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Teacher">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="EvalutionIndex">
-        <PropertyRef Name="TeacherID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Students_Teacher">
-    <End Role="Teacher" Type="Self.Teacher" Multiplicity="0..1" />
-    <End Role="Students" Type="Self.Students" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Teacher">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="Students">
-        <PropertyRef Name="TeacherID" />
+        <PropertyRef Name="StudentTeacher" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -176,29 +137,17 @@
     <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="StudentTeachers" EntityType="Self.StudentTeachers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK_Assignments_Students" Association="Self.FK_Assignments_Students">
-      <End Role="Students" EntitySet="Students" />
-      <End Role="Assignments" EntitySet="Assignments" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Assignments_Teacher" Association="Self.FK_Assignments_Teacher">
-      <End Role="Teacher" EntitySet="Teacher" />
+    <AssociationSet Name="FK_Assignments_StudentTeachers" Association="Self.FK_Assignments_StudentTeachers">
+      <End Role="StudentTeachers" EntitySet="StudentTeachers" />
       <End Role="Assignments" EntitySet="Assignments" />
     </AssociationSet>
     <AssociationSet Name="FK_EvalutionIndex_Assignments" Association="Self.FK_EvalutionIndex_Assignments">
       <End Role="Assignments" EntitySet="Assignments" />
       <End Role="EvalutionIndex" EntitySet="EvalutionIndex" />
     </AssociationSet>
-    <AssociationSet Name="FK_EvalutionIndex_Students" Association="Self.FK_EvalutionIndex_Students">
-      <End Role="Students" EntitySet="Students" />
+    <AssociationSet Name="FK_EvalutionIndex_StudentTeachers" Association="Self.FK_EvalutionIndex_StudentTeachers">
+      <End Role="StudentTeachers" EntitySet="StudentTeachers" />
       <End Role="EvalutionIndex" EntitySet="EvalutionIndex" />
-    </AssociationSet>
-    <AssociationSet Name="FK_EvalutionIndex_Teacher" Association="Self.FK_EvalutionIndex_Teacher">
-      <End Role="Teacher" EntitySet="Teacher" />
-      <End Role="EvalutionIndex" EntitySet="EvalutionIndex" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Students_Teacher" Association="Self.FK_Students_Teacher">
-      <End Role="Teacher" EntitySet="Teacher" />
-      <End Role="Students" EntitySet="Students" />
     </AssociationSet>
     <AssociationSet Name="FK_StudentTeachers_Students" Association="Self.FK_StudentTeachers_Students">
       <End Role="Students" EntitySet="Students" />

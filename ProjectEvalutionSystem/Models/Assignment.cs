@@ -21,16 +21,14 @@ namespace ProjectEvalutionSystem.Models
         }
     
         public int ID { get; set; }
-        public Nullable<int> StudentID { get; set; }
-        public Nullable<int> TeacherID { get; set; }
+        public Nullable<int> TeacherStudent { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Path { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
         public System.DateTime CreationTimeStamp { get; set; }
     
-        public virtual Student Student { get; set; }
-        public virtual Teacher Teacher { get; set; }
+        public virtual StudentTeacher StudentTeacher { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EvalutionIndex> EvalutionIndexes { get; set; }
     }

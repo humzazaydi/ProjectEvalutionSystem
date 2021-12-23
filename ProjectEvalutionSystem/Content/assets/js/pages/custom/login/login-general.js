@@ -62,9 +62,9 @@ var KTLogin = function () {
                             whoLogin: $('input[name="options"]:checked').val()
                         }
                         AjaxCall('/Authentication/Login', JSON.stringify(params), 'POST', onsuccess);
-                        function onsuccess(data) {
-                            debugger;
-                            if (data.success === true) {
+                        function onsuccess(response) {
+                            if (response.success === true) {
+                                setCookie("CurrentLoginInfo", JSON.stringify(response.data), 1);
                                 location.href = '/Home/Index';
                             } else {
                                 swal.fire({

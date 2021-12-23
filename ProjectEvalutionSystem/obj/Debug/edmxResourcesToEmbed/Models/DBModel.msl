@@ -22,8 +22,7 @@
           <ScalarProperty Name="Path" ColumnName="Path" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
-          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="TeacherStudent" ColumnName="TeacherStudent" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -31,9 +30,8 @@
     <EntitySetMapping Name="EvalutionIndexes">
       <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.EvalutionIndex">
         <MappingFragment StoreEntitySet="EvalutionIndex">
+          <ScalarProperty Name="StudentTeacher" ColumnName="StudentTeacher" />
           <ScalarProperty Name="AssignmentID" ColumnName="AssignmentID" />
-          <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
-          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
           <ScalarProperty Name="Comments" ColumnName="Comments" />
           <ScalarProperty Name="Remarks" ColumnName="Remarks" />
           <ScalarProperty Name="EvalutionDate" ColumnName="EvalutionDate" />
@@ -48,7 +46,6 @@
           <ScalarProperty Name="ModificationTimeStamp" ColumnName="ModificationTimeStamp" />
           <ScalarProperty Name="CreationTimStamp" ColumnName="CreationTimStamp" />
           <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-          <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
           <ScalarProperty Name="UserRole" ColumnName="UserRole" />
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="Username" ColumnName="Username" />

@@ -5,9 +5,12 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ProjectEvalutionSystem.Models;
+using ProjectEvalutionSystem.Models.Auth;
 
 namespace ProjectEvalutionSystem.Controllers
 { 
@@ -24,30 +27,20 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Exception", "ErrorHandling");
             }
 
-            return View(db.Assignments.Include(a => a.Student).Include(a => a.Teacher).ToList());
+            if ((UserRole)Session["UserRole"] == UserRole.SuperAdmin)
+            {
+                return View(db.Assignments.Include(a => a.StudentTeacher).ToList());
+            }
+            else if ((UserRole)Session["UserRole"] == UserRole.Teacher)
+            {
+                return View(db.Assignments.Include(a => a.StudentTeacher).Where(x => x.StudentTeacher.Teacher.ID == (int)Session["CurrentLoginId"]).ToList());
+            }
+            else
+            {
+                return View(db.Assignments.Include(a => a.StudentTeacher).Where(x=> x.StudentTeacher.Student.ID == (int)Session["CurrentLoginId"]).ToList());
+            }
+            
         }
-
-        // GET: Assignments/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (Session["UserRole"] == null)
-            {
-                Session["ErrorException"] = "Please Login First";
-                return RedirectToAction("Exception","ErrorHandling");
-            }
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Assignment assignment = db.Assignments.Find(id);
-            if (assignment == null)
-            {
-                return HttpNotFound();
-            }
-            return View(assignment);
-        }
-
         // GET: Assignments/Create
         public ActionResult Create()
         {
@@ -76,6 +69,24 @@ namespace ProjectEvalutionSystem.Controllers
             }
             if (ModelState.IsValid)
             {
+                //Check Relationship Teachers and Students
+                if (assignment.StudentTeacher.StudentID > 0)
+                {
+                    var _chkResult = db.StudentTeachers.Include(x=> x.Teacher).Where(x => x.StudentID == assignment.StudentTeacher.StudentID).ToList();
+                    foreach (StudentTeacher items in _chkResult)
+                    {
+                        if (items.TeacherID == assignment.StudentTeacher.TeacherID)
+                        {
+                            continue;
+                        }            
+                        else
+                        {
+                            Session["ErrorException"] = "This Teacher is not associated with this student. Please choose another";
+                            return RedirectToAction("Exception", "ErrorHandling");
+                        }
+                    }
+                }
+
                 if (file.ContentLength > 0)
                 {
                     string _FileName = Path.GetFileName(file.FileName);
@@ -91,8 +102,8 @@ namespace ProjectEvalutionSystem.Controllers
             }
 
 
-            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentID);
-            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.TeacherID);
+            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentTeacher.StudentID);
+            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.StudentTeacher.TeacherID);
             return View(assignment);
         }
 
@@ -115,8 +126,8 @@ namespace ProjectEvalutionSystem.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentID);
-            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.TeacherID);
+            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentTeacher.StudentID);
+            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.StudentTeacher.TeacherID);
             return View(assignment);
         }
 
@@ -144,7 +155,7 @@ namespace ProjectEvalutionSystem.Controllers
                         string _pathToBeCheck = string.Empty;
                         if (!string.IsNullOrEmpty(_assignment.Path))
                         {
-                            _pathToBeCheck = Path.Combine(Server.MapPath("~/App_Data"), _assignment.Student.FullName.Trim() + "_" + _assignment.Name.Trim());
+                            _pathToBeCheck = Path.Combine(Server.MapPath("~/App_Data"), _assignment.StudentTeacher.Student.FullName.Trim() + "_" + _assignment.Name.Trim());
                             //Removing Previous Assignments
                             if (System.IO.File.Exists(_pathToBeCheck))
                             {
@@ -165,8 +176,8 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentID);
-            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.TeacherID);
+            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName", assignment.StudentTeacher.StudentID);
+            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", assignment.StudentTeacher.TeacherID);
             return View(assignment);
         }
 

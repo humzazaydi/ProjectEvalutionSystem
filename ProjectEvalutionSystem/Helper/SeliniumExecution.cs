@@ -12,9 +12,9 @@ using System.Web;
 
 namespace ProjectEvalutionSystem.Helper
 {
-    public class SeliniumExecution
+    public static class SeliniumExecution
     {
-        private static string _browserDirectory = ConfigurationManager.AppSettings["seleniumBrowserDirectory"];
+        public static string _browserDirectory = ConfigurationManager.AppSettings["seleniumBrowserDirectory"];
         public static ChromeDriver driver = new ChromeDriver(_browserDirectory);
         public static WebDriverWait webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
         public static void StartProcess(string filePath)
@@ -23,8 +23,8 @@ namespace ProjectEvalutionSystem.Helper
             {
                 var AssignmentText = GetTextFromWordDoc(filePath);
 
-                driver.Manage().Window.FullScreen();
-                driver.Url = ConfigurationManager.AppSettings["PlagiarismCheckerURL"].ToString();
+                driver.Manage().Window.Maximize();
+                driver.Navigate().GoToUrl(ConfigurationManager.AppSettings["PlagiarismCheckerURL"].ToString());
 
                 // ERROR: Caught exception [ERROR: Unsupported command [selectFrame | index=0 | ]]
                 webDriverWait.IgnoreExceptionTypes(typeof(NoSuchElementException));

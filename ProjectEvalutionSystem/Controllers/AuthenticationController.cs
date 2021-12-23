@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using ProjectEvalutionSystem.Models;
 using ProjectEvalutionSystem.Models.Auth;
 using RestSharp;
+using HttpCookie = System.Web.HttpCookie;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -20,7 +21,11 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Authentication
         public ActionResult GetIn()
         {
-            return View();
+            if (Session["CurrentLoginName"] == null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -36,10 +41,11 @@ namespace ProjectEvalutionSystem.Controllers
                                 x.EmailAddress == input.EmailAddress && x.Password == input.Password);
                         if (result != null)
                         {
+                            Session["CurrentLoginId"] = result.ID;
                             Session["CurrentLoginName"] = result.FullName;
                             Session["CurrentLoginEmail"] = result.EmailAddress;
                             Session["UserRole"] = (int)result.UserRole;
-                            Session["CopyLeaksSession"] = LoginToCopyLeaks();
+
                             return Json(new { success = true, data = new LoginSessionDTO
                             {
                                 emailaddress = result.EmailAddress,
@@ -58,10 +64,10 @@ namespace ProjectEvalutionSystem.Controllers
                                 x.EmailAddress == input.EmailAddress && x.Password == input.Password);
                         if (result1 != null)
                         {
+                            Session["CurrentLoginId"] = result1.ID;
                             Session["CurrentLoginName"] = result1.FullName;
                             Session["CurrentLoginEmail"] = result1.EmailAddress;
-                            Session["UserRole"] = (int)result1.UserRole;
-                            Session["CopyLeaksSession"] = LoginToCopyLeaks();
+                            Session["UserRole"] = (UserRole)result1.UserRole;
                             return Json(new { success = true, data = new LoginSessionDTO
                             {
                                 emailaddress = result1.EmailAddress,
@@ -75,15 +81,15 @@ namespace ProjectEvalutionSystem.Controllers
                             return Json(new { success = false }, JsonRequestBehavior.AllowGet);
                         }
                     case UserRole.Student:
-                        var result2 = db.Students
+                        var result2 = db.Students.AsNoTracking()
                             .FirstOrDefault(x =>
                                 x.EmailAddress == input.EmailAddress && x.Password == input.Password);
                         if (result2 != null)
                         {
+                            Session["CurrentLoginId"] = result2.ID;
                             Session["CurrentLoginName"] =  result2.FullName;
                             Session["CurrentLoginEmail"] = result2.EmailAddress;
-                            Session["UserRole"] = (int)result2.UserRole;
-                            Session["CopyLeaksSession"] = LoginToCopyLeaks();
+                            Session["UserRole"] = (UserRole)result2.UserRole;
                             return Json(new { success = true, data = new LoginSessionDTO
                             {
                                 emailaddress = result2.EmailAddress,
@@ -115,32 +121,6 @@ namespace ProjectEvalutionSystem.Controllers
             Session.Abandon();
             Session.Clear();
             return RedirectToAction("GetIn");
-        }
-
-        public async Task LoginToCopyLeaks()
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    //CopyLeaks Authentication
-                    var param = new
-                    {
-                        Email = ConfigurationManager.AppSettings["CopyLeaksEmailAddress"],
-                        Key = ConfigurationManager.AppSettings["CopyLeaksAPISecretKey"]
-                    };
-                    var myContent = JsonConvert.SerializeObject(param);
-                    var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
-                    var byteContent = new ByteArrayContent(buffer);
-                    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    Session["CopyLeaksInfo"] = await client.PostAsync(AppConstants.GetCopyLeaksEndPoint() + "api/CopyleaksDemo/login", byteContent);
-                }
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
         }
     }
 

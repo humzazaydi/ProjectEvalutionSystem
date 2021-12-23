@@ -176,19 +176,7 @@ $('#btnStartEva').click(function () {
             onSuccess
         )
         function onSuccess(data) {
-            console.log(data);
-            submitFileToCopyLeaks();
+            debugger;
         }
     }
 });
-
-function submitFileToCopyLeaks() {
-    var param = {
-        Email : "syedmohammadhumzazaydi@gmail.com",
-        Key : "f9b9e9fb-b2d4-4471-a04c-8ff8b63d4ce6"
-    }
-    AjaxCall(CopyLeaksEndpoint + 'api/CopyleaksDemo/login', JSON.stringify(param), 'POST', onSuccess);
-    function onSuccess(data) {
-        debugger;
-    }
-}
