@@ -268,7 +268,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminsController.cs" />
-    <Compile Include="Controllers\AssignmentsController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\ErrorHandlingController.cs" />
     <Compile Include="Controllers\EvalutionIndexController.cs" />
@@ -380,6 +379,7 @@
     <Content Include="Content\assets\css\themes\layout\header\menu\light.css" />
     <Content Include="Content\assets\css\themes\layout\header\menu\light.min.css" />
     <Content Include="Scripts\CustomScripts\AddStudent.js" />
+    <Content Include="Scripts\CustomScripts\CreateAssignment.js" />
     <Content Include="Scripts\CustomScripts\Dashboard.js" />
     <Content Include="Scripts\CustomScripts\EvalutionIndex.js" />
     <Content Include="Scripts\CustomScripts\General.js" />
@@ -2512,21 +2512,12 @@
     <Content Include="Views\Admins\Delete.cshtml" />
     <Content Include="Views\Admins\Edit.cshtml" />
     <Content Include="Views\Admins\Index.cshtml" />
-    <Content Include="Views\Assignments\Create.cshtml" />
-    <Content Include="Views\Assignments\Delete.cshtml" />
-    <Content Include="Views\Assignments\Edit.cshtml" />
-    <Content Include="Views\Assignments\Index.cshtml" />
     <Content Include="Views\EvalutionIndex\Index.cshtml" />
     <Content Include="Views\StudentTeachers\Create.cshtml" />
     <Content Include="Views\StudentTeachers\Delete.cshtml" />
     <Content Include="Views\StudentTeachers\Edit.cshtml" />
     <Content Include="Views\StudentTeachers\Index.cshtml" />
     <Content Include="Views\ErrorHandling\Exception.cshtml" />
-    <Content Include="Views\AssignmentsTesting\Create.cshtml" />
-    <Content Include="Views\AssignmentsTesting\Delete.cshtml" />
-    <Content Include="Views\AssignmentsTesting\Details.cshtml" />
-    <Content Include="Views\AssignmentsTesting\Edit.cshtml" />
-    <Content Include="Views\AssignmentsTesting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

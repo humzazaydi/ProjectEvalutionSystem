@@ -14,21 +14,10 @@ namespace ProjectEvalutionSystem.Models
     
     public partial class StudentTeacher
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public StudentTeacher()
-        {
-            this.Assignments = new HashSet<Assignment>();
-            this.EvalutionIndexes = new HashSet<EvalutionIndex>();
-        }
-    
         public int ID { get; set; }
         public int StudentID { get; set; }
         public int TeacherID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Assignment> Assignments { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EvalutionIndex> EvalutionIndexes { get; set; }
         public virtual Student Student { get; set; }
         public virtual Teacher Teacher { get; set; }
     }

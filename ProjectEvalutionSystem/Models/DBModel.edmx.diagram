@@ -5,15 +5,18 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="3e62e600c457458e8963e2ce18e1fdbb" Name="Diagram1">
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Admin" Width="1.5" PointX="2.75" PointY="4.75" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Assignment" Width="1.5" PointX="5.25" PointY="1" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.EvalutionIndex" Width="1.5" PointX="7.5" PointY="1" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Student" Width="1.5" PointX="0.75" PointY="4.875" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.StudentTeacher" Width="1.5" PointX="3" PointY="1.125" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Teacher" Width="1.5" PointX="0.75" PointY="1" />
-        <AssociationConnector Association="ProjectEvalutionSystemModel.FK_Assignments_StudentTeachers" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Admin" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Assignment" Width="1.5" PointX="5.25" PointY="5.5" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.EvalutionIndex" Width="1.5" PointX="10.5" PointY="5.5" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Student" Width="1.5" PointX="3" PointY="7" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.StudentTeacher" Width="1.5" PointX="8.25" PointY="6.125" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Teacher" Width="1.5" PointX="0.75" PointY="3.375" />
+        <AssociationConnector Association="ProjectEvalutionSystemModel.FK_Assignments_Students" />
+        <AssociationConnector Association="ProjectEvalutionSystemModel.FK_Assignments_Teacher" />
         <AssociationConnector Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" />
-        <AssociationConnector Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_StudentTeachers" />
+        <AssociationConnector Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Students" />
+        <AssociationConnector Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Teacher" />
+        <AssociationConnector Association="ProjectEvalutionSystemModel.FK_Students_Teacher" />
         <AssociationConnector Association="ProjectEvalutionSystemModel.FK_StudentTeachers_Students" />
         <AssociationConnector Association="ProjectEvalutionSystemModel.FK_StudentTeachers_Teacher" />
       </Diagram>

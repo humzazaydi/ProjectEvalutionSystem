@@ -37,7 +37,8 @@ namespace ProjectEvalutionSystem.Controllers
                 using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
                 {
                     var result = await _context.EvalutionIndexes
-                        .Include(x => x.StudentTeacher)
+                        .Include(x => x.Teacher)
+                        .Include(x => x.Student)
                         .Include(x => x.Assignment)
                         .ToListAsync();
                     if (result.Any())
@@ -106,7 +107,7 @@ namespace ProjectEvalutionSystem.Controllers
                     var _teachers = await _context.StudentTeachers.Include(x => x.Teacher)
                         .Where(x => x.Student.ID == studentID).Select(x => new { x.Teacher.ID, x.Teacher.FullName }).Distinct().ToListAsync();
 
-                    var _assignments = await _context.Assignments.Where(x => x.StudentTeacher.StudentID == studentID).Select(x => new { x.ID, x.Name }).Distinct().ToListAsync();
+                    var _assignments = await _context.Assignments.Where(x => x.StudentID == studentID).Select(x => new { x.ID, x.Name }).Distinct().ToListAsync();
 
                     var dataSet = new
                     {
@@ -130,16 +131,16 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
                 {
-                    var Assignment = await _context.Assignments.Include(x => x.StudentTeacher.Student).Include(x => x.StudentTeacher.Teacher).Where(x => x.ID == assignmentid).FirstOrDefaultAsync();
+                    var Assignment = await _context.Assignments.Include(x => x.Student).Include(x => x.Teacher).Where(x => x.ID == assignmentid).FirstOrDefaultAsync();
                     if (Assignment != null)
                     {
                         //Checking Teacher
-                        if (Assignment.StudentTeacher.TeacherID != teacherid)
+                        if (Assignment.TeacherID != teacherid)
                         {
                             return Json(new { status = false, data = "Teacher does not match" }, JsonRequestBehavior.AllowGet);
                         }
                         //Checking Student
-                        if (Assignment.StudentTeacher.StudentID != studentid)
+                        if (Assignment.StudentID != studentid)
                         {
                             return Json(new { status = false, data = "Student does not match" }, JsonRequestBehavior.AllowGet);
                         }

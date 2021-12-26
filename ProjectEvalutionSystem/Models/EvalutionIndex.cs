@@ -19,10 +19,12 @@ namespace ProjectEvalutionSystem.Models
         public Nullable<System.DateTime> EvalutionDate { get; set; }
         public string Remarks { get; set; }
         public string Comments { get; set; }
+        public Nullable<int> StudentID { get; set; }
+        public Nullable<int> TeacherID { get; set; }
         public Nullable<int> AssignmentID { get; set; }
-        public Nullable<int> StudentTeacher { get; set; }
     
         public virtual Assignment Assignment { get; set; }
-        public virtual StudentTeacher StudentTeacher1 { get; set; }
+        public virtual Student Student { get; set; }
+        public virtual Teacher Teacher { get; set; }
     }
 }

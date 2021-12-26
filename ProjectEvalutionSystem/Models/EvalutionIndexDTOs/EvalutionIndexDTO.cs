@@ -27,12 +27,12 @@ namespace ProjectEvalutionSystem.Models.EvalutionIndexDTOs
                 SubmissionDate = input.SubmissionDate,
                 Remarks = input.Remarks,
                 Comments = input.Comments,
-                StudentID = input.StudentTeacher,
-                TeacherID = input.StudentTeacher1.TeacherID,
+                StudentID = input.Student.ID,
+                TeacherID = input.Teacher.ID,
                 AssignmentID = input.AssignmentID,
                 AssignmentName = input.Assignment.Name,
-                StudentName = input.StudentTeacher1.Student.FullName,
-                TeacherName = input.StudentTeacher1.Teacher.FullName
+                StudentName = input.Student.FullName,
+                TeacherName = input.Teacher.FullName
             };
         }
     }
