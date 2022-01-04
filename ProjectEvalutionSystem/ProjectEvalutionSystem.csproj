@@ -287,6 +287,7 @@
     <Compile Include="Models\Assignment.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AssignmentDTOs\AssignmentsDTO.cs" />
     <Compile Include="Models\Auth\LoginDTO.cs" />
     <Compile Include="Models\DBModel.Context.cs">
       <AutoGen>True</AutoGen>
@@ -2519,10 +2520,10 @@
     <Content Include="Views\StudentTeachers\Edit.cshtml" />
     <Content Include="Views\StudentTeachers\Index.cshtml" />
     <Content Include="Views\ErrorHandling\Exception.cshtml" />
+    <Content Include="Views\Assignments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Assignments\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

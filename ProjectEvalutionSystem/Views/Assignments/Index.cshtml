@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Assignments";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <input type="file" id="FileUpload1" />
+    <input type="button" id="btnUpload" value="Upload Files" />
+
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#btnUpload').click(function () {
+
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+                var files = $("#FileUpload1").get(0).files;
+
+                // Create FormData object
+                var fileData = new FormData();
+                
+                fileData.append("Files", files[0]);
+                fileData.append("ID", 0);
+                fileData.append("TeacherStudentID", 1);
+                fileData.append("Name", "Testing Assignment Title");
+                fileData.append("Description", "Testing Assignment Description");
+                
+                $.ajax({
+                    url: '/Assignments/PostAsync',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    enctype: 'multipart/form-data',
+                    data: fileData,
+                    success: function (result) {
+                        alert(result);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+    });
+</script>
+</html>
+
