@@ -23,7 +23,28 @@ namespace ProjectEvalutionSystem.Controllers
                 Session["ErrorException"] = "Please Login First";
                 return RedirectToAction("Exception", "ErrorHandling");
             }
-            return View(db.Students.ToList());
+
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.SuperAdmin:
+                    return View(db.Students.ToList());
+                case UserRole.Teacher:
+
+                    List<Student> resultSet = new List<Student>();
+                    int teacherID = (int) Session["CurrentLoginId"];
+                    var students = db.StudentTeachers.Include(x => x.Student);
+
+                    foreach (var item in students.Where(x=> x.TeacherID == teacherID).ToList())
+                    {
+                        resultSet.Add(item.Student);
+                    }
+
+                    return View(resultSet);
+                case UserRole.Student:
+                    return View(db.Students.Where(x => x.ID == (int) Session["CurrentLoginId"]).FirstOrDefault());
+                default:
+                    return View(new List<Student>());
+            }
         }
 
         // GET: Students/Create

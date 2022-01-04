@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
+using ProjectEvalutionSystem.Models.Auth;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -23,30 +24,27 @@ namespace ProjectEvalutionSystem.Controllers
                 Session["ErrorException"] = "Please Login First";
                 return RedirectToAction("Exception", "ErrorHandling");
             }
-            var studentTeachers = db.StudentTeachers.Include(s => s.Student).Include(s => s.Teacher);
-            return View(await studentTeachers.ToListAsync());
-        }
 
-        // GET: StudentTeachers/Details/5
-        public async Task<ActionResult> Details(int? id)
-        {
-            if (Session["UserRole"] == null)
+            switch ((UserRole)Session["UserRole"])
             {
-                Session["ErrorException"] = "Please Login First";
-                return RedirectToAction("Exception", "ErrorHandling");
-            }
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            StudentTeacher studentTeacher = await db.StudentTeachers.FindAsync(id);
-            if (studentTeacher == null)
-            {
-                return HttpNotFound();
-            }
-            return View(studentTeacher);
-        }
+                case UserRole.SuperAdmin:
+                    return View(await db.StudentTeachers.Include(s => s.Student).Include(s => s.Teacher).ToListAsync());
+                case UserRole.Teacher:
 
+                    List<StudentTeacher> resultSet = new List<StudentTeacher>();
+                    int teacherID = (int)Session["CurrentLoginId"];
+                    var students = db.StudentTeachers.Include(x => x.Student).Include(s => s.Teacher);
+
+                    foreach (var item in students.Where(x => x.TeacherID == teacherID).ToList())
+                    {
+                        resultSet.Add(item);
+                    }
+
+                    return View(resultSet);
+                default:
+                    return View(new List<StudentTeacher>());
+            }
+        }
         // GET: StudentTeachers/Create
         public ActionResult Create()
         {
@@ -55,8 +53,24 @@ namespace ProjectEvalutionSystem.Controllers
                 Session["ErrorException"] = "Please Login First";
                 return RedirectToAction("Exception", "ErrorHandling");
             }
-            ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName");
-            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName");
+
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.SuperAdmin:
+                    ViewBag.StudentID = new SelectList(db.Students, "ID", "FullName");
+                    ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName");
+                    break;
+                case UserRole.Teacher:
+                    int teacherID = (int)Session["CurrentLoginId"];
+                    var studentIds = db.StudentTeachers
+                        .Include(x => x.Student)
+                        .Where(x => x.TeacherID == teacherID).Select(x => x.StudentID).ToArray();
+                    ViewBag.StudentID = new SelectList(db.Students.Where(x=> studentIds.Contains(x.ID)), "ID", "FullName");
+                    ViewBag.TeacherID = new SelectList(db.Teachers.Where(x=> x.ID == teacherID), "ID", "FullName");
+                    break;
+                default:
+                    break;
+            }
             return View();
         }
 

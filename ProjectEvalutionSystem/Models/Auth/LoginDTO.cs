@@ -17,7 +17,7 @@
     public enum UserRole
     {
         SuperAdmin = 1,
-        Student = 2,
-        Teacher=3
+        Teacher = 2,
+        Student =3
     }
 }
