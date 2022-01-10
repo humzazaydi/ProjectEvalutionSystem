@@ -226,9 +226,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WebDriver, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Selenium.WebDriver.4.1.0\lib\net46\WebDriver.dll</HintPath>
@@ -281,8 +278,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper\AutomationProcess.cs" />
-    <Compile Include="Helper\SeliniumExecution.cs" />
     <Compile Include="Models\Admin.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -2529,9 +2524,12 @@
     <Content Include="Views\Assignments\Create.cshtml" />
     <Content Include="Views\Assignments\Delete.cshtml" />
     <Content Include="Views\Assignments\Edit.cshtml" />
+    <Content Include="Views\EvalutionIndexes\StartEvaluation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Helper\" />
+    <Folder Include="Views\Webhook\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

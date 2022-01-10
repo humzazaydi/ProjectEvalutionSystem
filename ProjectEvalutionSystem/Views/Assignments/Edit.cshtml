@@ -22,7 +22,7 @@
     <div class="separator separator-solid separator-white opacity-20"></div>
     <div class="card-body">
         <div class="container">
-            @using (Html.BeginForm())
+            @using (Html.BeginForm("Edit", "Assignments", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
 
@@ -42,16 +42,22 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @required= "required" } })
+                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
                             @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         @Html.LabelFor(model => model.CourseID, "CourseID", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.DropDownList("CourseID", null, htmlAttributes: new { @class = "form-control", @required = "required" })
                             @Html.ValidationMessageFor(model => model.CourseID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input class="btn btn-default btn-lg" type="file" name="assignmentFile" />
                         </div>
                     </div>
 
@@ -65,7 +71,3 @@
         </div>
     </div>
 </div>
-
-
-
-

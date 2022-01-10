@@ -24,7 +24,7 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: EvalutionIndexes/Create
         public ActionResult Create()
         {
-            ViewBag.AssignmentID = new SelectList(db.Assignments, "ID", "Name");
+            ViewBag.Assignment = new SelectList(db.Assignments, "ID", "Name");
             return View();
         }
 
@@ -33,18 +33,12 @@ namespace ProjectEvalutionSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,SubmissionDate,Remarks,Comments,AssignmentID")] EvalutionIndex evalutionIndex)
+        public async Task<ActionResult> Create([Bind(Include = "ID,SubmissionDate,Remarks,Comments,Assignment")] EvalutionIndex evalutionIndex)
         {
-            if (ModelState.IsValid)
-            {
-                evalutionIndex.EvalutionDate = DateTime.Now;
-                db.EvalutionIndexes.Add(evalutionIndex);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.AssignmentID = new SelectList(db.Assignments, "ID", "Name", evalutionIndex.AssignmentID);
-            return View(evalutionIndex);
+            evalutionIndex.EvalutionDate = DateTime.Now;
+            db.EvalutionIndexes.Add(evalutionIndex);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         // GET: EvalutionIndexes/Edit/5
@@ -70,14 +64,21 @@ namespace ProjectEvalutionSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "ID,SubmissionDate,Remarks,Comments,AssignmentID")] EvalutionIndex evalutionIndex)
         {
-            if (ModelState.IsValid)
+            var GetevalutionIndex = await db.EvalutionIndexes.FindAsync(evalutionIndex.ID);
+            if (GetevalutionIndex !=null)
             {
-                db.Entry(evalutionIndex).State = EntityState.Modified;
+                GetevalutionIndex.AssignmentID = evalutionIndex.AssignmentID;
+                GetevalutionIndex.Remarks = evalutionIndex.Remarks;
+                GetevalutionIndex.Comments = evalutionIndex.Comments;
+                GetevalutionIndex.SubmissionDate = evalutionIndex.SubmissionDate;
+                db.Entry(GetevalutionIndex).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.AssignmentID = new SelectList(db.Assignments, "ID", "Name", evalutionIndex.AssignmentID);
-            return View(evalutionIndex);
+
+            ViewBag.Assignment = new SelectList(db.Assignments, "ID", "Name", evalutionIndex.AssignmentID);
+            return View();
+
         }
 
         // GET: EvalutionIndexes/Delete/5
@@ -104,6 +105,12 @@ namespace ProjectEvalutionSystem.Controllers
             db.EvalutionIndexes.Remove(evalutionIndex);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        [HttpGet, ActionName("StartEvaluation")]
+        public async Task<ActionResult> StartEvaluation(int id)
+        {
+            return View();
         }
 
         protected override void Dispose(bool disposing)

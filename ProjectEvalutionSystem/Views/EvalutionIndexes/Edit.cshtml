@@ -11,7 +11,7 @@
                 <i class="flaticon2-chat-1 text-primary"></i>
             </span>
             <h3 class="card-label text-primary">
-                @Model.Assignment.Name
+                Edit Evaluation
             </h3>
         </div>
         <div class="card-toolbar">
@@ -32,7 +32,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.SubmissionDate, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.SubmissionDate, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                            @Html.EditorFor(model => model.SubmissionDate, new { htmlAttributes = new { @class = "form-control datepicker", @required = "required" } })
                             @Html.ValidationMessageFor(model => model.SubmissionDate, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -70,3 +70,48 @@
         </div>
     </div>
 </div>
+@section Scripts
+{
+    <script>
+        // Class definition
+
+        var KTBootstrapDatepicker = function () {
+
+            var arrows;
+            if (KTUtil.isRTL()) {
+                arrows = {
+                    leftArrow: '<i class="la la-angle-right"></i>',
+                    rightArrow: '<i class="la la-angle-left"></i>'
+                }
+            } else {
+                arrows = {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>'
+                }
+            }
+
+            // Private functions
+            var demos = function () {
+                // minimum setup
+                $('.datepicker').datepicker({
+                    rtl: KTUtil.isRTL(),
+                    todayHighlight: true,
+                    orientation: "bottom left",
+                    templates: arrows
+                });
+
+            }
+
+            return {
+                // public functions
+                init: function () {
+                    demos();
+                }
+            };
+        }();
+
+        jQuery(document).ready(function () {
+            KTBootstrapDatepicker.init();
+        });
+    </script>
+}

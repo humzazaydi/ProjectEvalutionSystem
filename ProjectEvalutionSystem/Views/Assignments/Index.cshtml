@@ -5,60 +5,85 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="card card-custom gutter-b">
+    <div class="card-header border-0">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-chat-1 text-primary"></i>
+            </span>
+            <h3 class="card-label text-primary">
+                Assignment's Grid View
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a href="/Assignments/Create" class="btn btn-sm btn-primary">
+                <i class="flaticon2-cube"></i> Add Assignment
+            </a>
+        </div>
+    </div>
+    <div class="separator separator-solid separator-white opacity-20"></div>
+    <div class="card-body">
+        <div class="container">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Path)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsDeleted)
+                    </th>
+                    <th>
+                        Course
+                    </th>
+                    <th></th>
+                </tr>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Path)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreationTimeStamp)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Cours.Name)
-        </th>
-        <th></th>
-    </tr>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Path)
+                        </td>
+                        <td>
+                            @{
+                                if (Convert.ToBoolean(item.IsDeleted) != null && Convert.ToBoolean(item.IsDeleted))
+                                {
+                                    <span class="label label-danger label-inline mr-2">Deleted</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-success label-inline mr-2">Active</span>
+                                }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Path)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsDeleted)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreationTimeStamp)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cours.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cours.Name)
+                        </td>
+                        <td>
+                            <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                    <a href="/Assignments/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>
+                                    <a href="/Assignments/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
 
-</table>
+            </table>
+        </div>
+    </div>
+</div>
+

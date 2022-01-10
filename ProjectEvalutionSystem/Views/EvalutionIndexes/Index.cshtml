@@ -27,7 +27,7 @@
             <table class="table table-bordered">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Assignment.Name)
+                        @Html.DisplayNameFor(model => model.ID)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.SubmissionDate)
@@ -42,6 +42,9 @@
                         @Html.DisplayNameFor(model => model.Comments)
                     </th>
                     <th>
+                        @Html.DisplayNameFor(model => model.Assignment)
+                    </th>
+                    <th>
                         Actions
                     </th>
                 </tr>
@@ -50,7 +53,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Assignment.Name)
+                            @Html.DisplayFor(modelItem => item.ID)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.SubmissionDate)
@@ -64,12 +67,18 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Comments)
                         </td>
-                        <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-                            <div class="btn-group mr-2" role="group" aria-label="First group">
-                                <a href="/EvalutionIndexes/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>
-                                <a href="/EvalutionIndexes/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Assignment.Name)
+                        </td>
+                        <td>
+                            <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                    <a href="/EvalutionIndexes/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon m-1"><i class="la la-pencil"></i></button></a>
+                                    <a href="/EvalutionIndexes/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon m-1"><i class="la la-trash"></i></button></a>
+                                    <a href="/EvalutionIndexes/StartEvaluation/@item.ID.ToString()"><button type="button" class="btn btn-outline-success m-1">Start Evaluation <i class="fas fa-arrow-right"></i></button></a>
+                                </div>
                             </div>
-                        </div>
+                        </td>
                     </tr>
                 }
 

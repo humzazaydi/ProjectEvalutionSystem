@@ -45,6 +45,9 @@ namespace ProjectEvalutionSystem.Controllers
                     assignmentFile.SaveAs(filename);
                     assignment.Path = assignmentFile.FileName;
                 }
+
+                assignment.IsDeleted = false;
+                assignment.CreationTimeStamp = DateTime.Now;
                 db.Assignments.Add(assignment);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -95,8 +98,8 @@ namespace ProjectEvalutionSystem.Controllers
                     }
 
                     assignment.Path = assignmentFile.FileName;
+                    assignment.CreationTimeStamp = DateTime.Now;
                 }
-
                 db.Entry(assignment).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
