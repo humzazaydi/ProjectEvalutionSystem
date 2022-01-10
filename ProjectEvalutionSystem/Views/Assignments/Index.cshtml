@@ -1,58 +1,64 @@
-﻿@{
-    Layout = null;
-    ViewBag.Title = "Assignments";
+﻿@model IEnumerable<ProjectEvalutionSystem.Models.Assignment>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
+<h2>Index</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <input type="file" id="FileUpload1" />
-    <input type="button" id="btnUpload" value="Upload Files" />
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Path)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreationTimeStamp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cours.Name)
+        </th>
+        <th></th>
+    </tr>
 
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Path)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsDeleted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreationTimeStamp)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cours.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
 
-</body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#btnUpload').click(function () {
-
-            // Checking whether FormData is available in browser
-            if (window.FormData !== undefined) {
-                var files = $("#FileUpload1").get(0).files;
-
-                // Create FormData object
-                var fileData = new FormData();
-                
-                fileData.append("Files", files[0]);
-                fileData.append("ID", 0);
-                fileData.append("TeacherStudentID", 1);
-                fileData.append("Name", "Testing Assignment Title");
-                fileData.append("Description", "Testing Assignment Description");
-                
-                $.ajax({
-                    url: '/Assignments/PostAsync',
-                    type: "POST",
-                    contentType: false, // Not to set any content header
-                    processData: false, // Not to process data
-                    enctype: 'multipart/form-data',
-                    data: fileData,
-                    success: function (result) {
-                        alert(result);
-                    },
-                    error: function (err) {
-                        alert(err.statusText);
-                    }
-                });
-            } else {
-                alert("FormData is not supported.");
-            }
-        });
-    });
-</script>
-</html>
-
+</table>

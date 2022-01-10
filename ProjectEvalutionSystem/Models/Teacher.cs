@@ -17,7 +17,7 @@ namespace ProjectEvalutionSystem.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Teacher()
         {
-            this.StudentTeachers = new HashSet<StudentTeacher>();
+            this.Courses = new HashSet<Cours>();
         }
     
         public int ID { get; set; }
@@ -29,6 +29,6 @@ namespace ProjectEvalutionSystem.Models
         public Nullable<bool> IsActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudentTeacher> StudentTeachers { get; set; }
+        public virtual ICollection<Cours> Courses { get; set; }
     }
 }

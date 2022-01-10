@@ -41,6 +41,13 @@
                                 @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                             </div>
                         </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TeacherID, htmlAttributes: new { @class = "control-label col-auto" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.TeacherID, ViewBag.TeacherID as SelectList, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TeacherID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
@@ -57,7 +64,6 @@
                                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="row">

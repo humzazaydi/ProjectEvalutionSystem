@@ -1,132 +1,143 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
 using System.Web;
-using System.Web.ModelBinding;
 using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
-using ProjectEvalutionSystem.Models.AssignmentDTOs;
 
 namespace ProjectEvalutionSystem.Controllers
 {
     public class AssignmentsController : Controller
     {
         private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
+
         // GET: Assignments
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            var assignments = db.Assignments.Include(a => a.Cours);
+            return View(await assignments.ToListAsync());
+        }
+
+        // GET: Assignments/Create
+        public ActionResult Create()
+        {
+            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name");
             return View();
         }
-        [HttpGet]
-        public async Task<JsonResult> GetAsync()
-        {
-            try
-            {
-                var assignments = await db.Assignments.Where(x => x.IsDeleted == false).ToListAsync();
-                return Json(assignments, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception exception)
-            {
-                return Json(exception.InnerException, JsonRequestBehavior.AllowGet);
-            }
-        }
 
-        [HttpGet]
-        [Route("GetAsync/{assignmentId}")]
-        public async Task<JsonResult> GetAsync(int assignmentId)
-        {
-            try
-            {
-                var assignments = await db.Assignments.Where(x => x.ID == assignmentId && x.IsDeleted == false).FirstOrDefaultAsync();
-                return Json(assignments, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception exception)
-            {
-                return Json(exception.InnerException, JsonRequestBehavior.AllowGet);
-            }
-        }
-
+        // POST: Assignments/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<JsonResult> PostAsync([Form] AssignmentsDTO input)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind(Include = "ID,Name,Description,CourseID")] Assignment assignment, HttpPostedFileBase assignmentFile)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (input.Files != null)
+                if (assignmentFile != null)
                 {
-                    //Get all files from Request object  
-                    HttpPostedFileBase file = input.Files;
-                    string fname;
-
-                    // Checking for Internet Explorer  
-                    if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
-                    {
-                        string[] testfiles = file.FileName.Split(new char[] { '\\' });
-                        fname = testfiles[testfiles.Length - 1];
-                    }
-                    else
-                    {
-                        fname = file.FileName;
-                    }
-
-                    // Get the complete folder path and store the file inside it.  
-                    fname = Path.Combine(Server.MapPath("~/App_Data/"), fname);
-                    file.SaveAs(fname);
-                    var assignmentTobeAdd = new Assignment
-                    {
-                        TeacherStudent = input.TeacherStudentID,
-                        Name = input.Name,
-                        Description = input.Description,
-                        Path = file.FileName,
-                        IsDeleted = false,
-                        CreationTimeStamp = DateTime.Now
-                    };
-
-                    db.Assignments.Add(assignmentTobeAdd);
-                    await db.SaveChangesAsync();
-
-                    return Json(input.ID, JsonRequestBehavior.AllowGet);
+                    var filename = Path.Combine(Server.MapPath("~/App_Data/"), assignmentFile.FileName);
+                    assignmentFile.SaveAs(filename);
+                    assignment.Path = assignmentFile.FileName;
                 }
-                else
-                {
-                    return Json("Please upload a document", JsonRequestBehavior.AllowGet);
-                }
-                
+                db.Assignments.Add(assignment);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
-            catch (Exception exception)
-            {
-                return Json(exception.InnerException, JsonRequestBehavior.AllowGet);
-            }
+
+            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name", assignment.CourseID);
+            return View(assignment);
         }
 
-        [HttpPut]
-        public async Task<JsonResult> PutAsync(AssignmentsDTO input)
+        // GET: Assignments/Edit/5
+        public async Task<ActionResult> Edit(int? id)
         {
-            try
+            if (id == null)
             {
-                var assignment = await db.Assignments.Where(x => x.ID == input.ID).FirstOrDefaultAsync();
-                if (assignment != null)
-                {
-                    assignment.Name = input.Name;
-                    assignment.Description = input.Description;
-                    assignment.TeacherStudent = input.TeacherStudentID;
-
-                    db.Entry(assignment).State = EntityState.Modified;
-                    await db.SaveChangesAsync();
-
-                    return Json(assignment.ID, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(null, JsonRequestBehavior.AllowGet);
-                }
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            catch (Exception exception)
+            Assignment assignment = await db.Assignments.FindAsync(id);
+            if (assignment == null)
             {
-                return Json(exception.InnerException, JsonRequestBehavior.AllowGet);
+                return HttpNotFound();
             }
+            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name", assignment.CourseID);
+            return View(assignment);
+        }
+
+        // POST: Assignments/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,Description,Path,CourseID")] Assignment assignment, HttpPostedFileBase assignmentFile)
+        {
+            if (ModelState.IsValid)
+            {
+                if (assignmentFile != null)
+                {
+                    DirectoryInfo dir = new DirectoryInfo(Server.MapPath("~/App_Data/"));
+                    var files = dir.GetFiles();
+                    foreach (var item in files)
+                    {
+                        if (item.Name == assignment.Path)
+                        {
+                            item.Delete();
+
+                            var filename = Path.Combine(Server.MapPath("~/App_Data/"), assignmentFile.FileName);
+                            assignmentFile.SaveAs(filename);
+                        }
+                    }
+
+                    assignment.Path = assignmentFile.FileName;
+                }
+
+                db.Entry(assignment).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name", assignment.CourseID);
+            return View(assignment);
+        }
+
+        // GET: Assignments/Delete/5
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Assignment assignment = await db.Assignments.FindAsync(id);
+            if (assignment == null)
+            {
+                return HttpNotFound();
+            }
+            return View(assignment);
+        }
+
+        // POST: Assignments/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int id)
+        {
+            Assignment assignment = await db.Assignments.FindAsync(id);
+            db.Assignments.Remove(assignment);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

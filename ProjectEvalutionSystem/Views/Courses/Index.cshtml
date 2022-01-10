@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ProjectEvalutionSystem.Models.Cours>
+
+@{
+    ViewBag.Title = "Courses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card card-custom gutter-b">
+    <div class="card-header border-0">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-chat-1 text-primary"></i>
+            </span>
+            <h3 class="card-label text-primary">
+                Courses's Grid View
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a href="/Courses/Create" class="btn btn-sm btn-primary">
+                <i class="flaticon2-cube"></i> Add Course
+            </a>
+        </div>
+    </div>
+    <div class="separator separator-solid separator-white opacity-20"></div>
+    <div class="card-body">
+        <div class="container">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Teacher)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreationTimeStamp)
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Teacher.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationTimeStamp)
+                </td>
+                <td>
+                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <a href="/Courses/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>
+                            <a href="/Courses/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+

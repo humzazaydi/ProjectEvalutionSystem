@@ -20,9 +20,7 @@ namespace ProjectEvalutionSystem.Models
         public string Remarks { get; set; }
         public string Comments { get; set; }
         public Nullable<int> AssignmentID { get; set; }
-        public Nullable<int> StudentTeacher { get; set; }
     
         public virtual Assignment Assignment { get; set; }
-        public virtual StudentTeacher StudentTeacher1 { get; set; }
     }
 }
