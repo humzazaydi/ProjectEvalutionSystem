@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ProjectEvalutionSystem.Models.Assignment>
+﻿@using ProjectEvalutionSystem.Models.Auth
+@model IEnumerable<ProjectEvalutionSystem.Models.Assignment>
 @{
     ViewBag.Title = "Home Page";
 }
@@ -6,38 +7,98 @@
 
     <div class="animatable fadeIn">
         <div class="row admin-section">
-            <div class="col-xl-4">
-                <!--begin::Stats Widget 1-->
-                <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-success" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/General/User.svg); ">
-                    <!--begin::Body-->
-                    <div class="card-body">
-                        <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem;font-weight: 600 !important;" id="totalstudents">0</h1>
-                        <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Students</h5>
+            @{
+                switch ((UserRole)Session["UserRole"])
+                {
+                    case UserRole.Teacher:
+                        <div class="col-xl-6">
+                            <!--begin::Stats Widget 1-->
+                            <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-success" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/General/User.svg);">
+                                <!--begin::Body-->
+                                <div class="card-body">
+                                    <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem; font-weight: 600 !important;" id="totalstudents">0</h1>
+                                    <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Students</h5>
 
-                    </div>
-                    <!--end::Body-->
-                </div>
-                <!--end::Stats Widget 1-->
-            </div>
-            <div class="col-xl-4">
+                                </div>
+                                <!--end::Body-->
+                            </div>
+                            <!--end::Stats Widget 1-->
+                        </div>
+                        <div class="col-xl-6">
+                            <!--begin::Stats Widget 3-->
+                            <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-warning" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/Shopping/Chart-pie.svg);">
+                                <!--begin::body-->
+                                <div class="card-body">
+                                    <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem; font-weight: 600 !important;" id="totalassignments">0</h1>
+                                    <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Assignments</h5>
+                                </div>
+                                <!--end::Body-->
+                            </div>
+                            <!--end::Stats Widget 3-->
+                        </div>
+                        break;
+
+                    case UserRole.SuperAdmin:
+                        <div class="col-xl-4">
+                            <!--begin::Stats Widget 1-->
+                            <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-info" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/General/User.svg);">
+                                <!--begin::Body-->
+                                <div class="card-body">
+                                    <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem; font-weight: 600 !important;" id="totalstudents">0</h1>
+                                    <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Students</h5>
+
+                                </div>
+                                <!--end::Body-->
+                            </div>
+                            <!--end::Stats Widget 1-->
+                        </div>
+                        <div class="col-xl-4">
+                            <!--begin::Stats Widget 3-->
+                            <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-primary" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/Shopping/Chart-pie.svg);">
+                                <!--begin::body-->
+                                <div class="card-body">
+                                    <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem; font-weight: 600 !important;" id="totalteachers">0</h1>
+                                    <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Teachers</h5>
+                                </div>
+                                <!--end::Body-->
+                            </div>
+                            <!--end::Stats Widget 3-->
+                        </div>
+                        <div class="col-xl-4">
+                            <!--begin::Stats Widget 3-->
+                            <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-danger" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/Shopping/Chart-pie.svg);">
+                                <!--begin::body-->
+                                <div class="card-body">
+                                    <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem; font-weight: 600 !important;" id="totalassignments">0</h1>
+                                    <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Assignments</h5>
+                                </div>
+                                <!--end::Body-->
+                            </div>
+                            <!--end::Stats Widget 3-->
+                        </div>
+                        break;
+                }
+            }
+
+            <div class="col-xl-6">
                 <!--begin::Stats Widget 3-->
-                <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-info" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/Shopping/Chart-pie.svg); ">
+                <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-dark-o-50" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/Shopping/Chart-pie.svg);">
                     <!--begin::body-->
                     <div class="card-body">
-                        <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem;font-weight: 600 !important;" id="totalteachers">0</h1>
-                        <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Teachers</h5>
+                        <h1 class="card-title font-weight-bold text-dark countfect" style="font-size: 3rem; font-weight: 600 !important;" id="totalevaluation">0</h1>
+                        <h5 class="font-weight-bold mt-9 mb-5 text-dark">Total Evaluation</h5>
                     </div>
                     <!--end::Body-->
                 </div>
                 <!--end::Stats Widget 3-->
             </div>
-            <div class="col-xl-4">
+            <div class="col-xl-6">
                 <!--begin::Stats Widget 3-->
-                <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-primary" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/Shopping/Chart-pie.svg); ">
+                <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-dark" style="background-position: 130% -21px; background-size: 50% auto; background-image: url(/theme/media/svg/icons/Shopping/Chart-pie.svg);">
                     <!--begin::body-->
                     <div class="card-body">
-                        <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem;font-weight: 600 !important;" id="totalassignments">0</h1>
-                        <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Assignments</h5>
+                        <h1 class="card-title font-weight-bold text-light countfect" style="font-size: 3rem; font-weight: 600 !important;" id="totalcourses">0</h1>
+                        <h5 class="font-weight-bold mt-9 mb-5 text-light">Total Courses</h5>
                     </div>
                     <!--end::Body-->
                 </div>
@@ -65,66 +126,66 @@
         </div>
         <div class="card-body">
             @*@{
-                if (Model.Any())
-                {
-                    <table class="table table-bordered table-hover">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ID)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Description)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.IsDeleted)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CreationTimeStamp)
-                            </th>
-                        </tr>
-
-                        @foreach (var item in Model)
-                        {
+                    if (Model.Any())
+                    {
+                        <table class="table table-bordered table-hover">
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ID)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Description)
-                                </td>
-                                <td>
-                                    @{
-                                        if (!Convert.ToBoolean(item.IsDeleted))
-                                        {
-                                            <span class="label label-success label-inline mr-2">Active</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="label label-danger label-inline mr-2">In Active</span>
-                                        }
-
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CreationTimeStamp)
-                                </td>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ID)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.IsDeleted)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.CreationTimeStamp)
+                                </th>
                             </tr>
-                        }
-                    </table>
-                }
-                else
-                {
-                    <h3 class="card-label text-center">
-                        No Data
-                    </h3>
-                }
-            }*@
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @{
+                                            if (!Convert.ToBoolean(item.IsDeleted))
+                                            {
+                                                <span class="label label-success label-inline mr-2">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger label-inline mr-2">In Active</span>
+                                            }
+
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CreationTimeStamp)
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <h3 class="card-label text-center">
+                            No Data
+                        </h3>
+                    }
+                }*@
         </div>
     </div>
 </div>

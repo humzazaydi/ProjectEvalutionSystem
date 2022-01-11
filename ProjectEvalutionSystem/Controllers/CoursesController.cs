@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
+using ProjectEvalutionSystem.Models.Auth;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -18,7 +19,19 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Courses
         public async Task<ActionResult> Index()
         {
-            var courses = db.Courses.Include(c => c.Teacher);
+            IQueryable<Cours> courses = null;
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    courses = db.Courses.Include(a => a.Teacher).Where(x => x.TeacherID == sessionID);
+                    break;
+
+                case UserRole.SuperAdmin:
+                    courses = db.Courses.Include(a => a.Teacher);
+                    break;
+            }
+
             return View(await courses.ToListAsync());
         }
         
@@ -26,7 +39,17 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Courses/Create
         public ActionResult Create()
         {
-            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName");
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.TeacherID = new SelectList(db.Teachers.Where(x => x.ID == sessionID).ToList(), "ID", "FullName");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.TeacherID = new SelectList(db.Teachers.ToList(), "ID", "FullName");
+                    break;
+            }
             return View();
         }
 
@@ -46,7 +69,17 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TeacherID = new SelectList(db.Teachers, "ID", "FullName", cours.TeacherID);
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.TeacherID = new SelectList(db.Teachers.Where(x => x.ID == sessionID).ToList(), "ID", "FullName");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.TeacherID = new SelectList(db.Teachers.ToList(), "ID", "FullName");
+                    break;
+            }
             return View(cours);
         }
 

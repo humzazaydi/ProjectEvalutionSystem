@@ -9,6 +9,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
+using ProjectEvalutionSystem.Models.Auth;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -19,14 +20,36 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: Assignments
         public async Task<ActionResult> Index()
         {
-            var assignments = db.Assignments.Include(a => a.Cours);
+            IQueryable<Assignment> assignments = null;
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    assignments = db.Assignments.Include(a => a.Cours).Where(x=> x.Cours.TeacherID == sessionID);
+                    break;
+
+                case UserRole.SuperAdmin:
+                    assignments = db.Assignments.Include(a => a.Cours);
+                    break;
+            }
+            
             return View(await assignments.ToListAsync());
         }
 
         // GET: Assignments/Create
         public ActionResult Create()
         {
-            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name");
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.CourseID = new SelectList(db.Courses.Where(x => x.TeacherID == sessionID).ToList(), "ID", "Name");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.CourseID = new SelectList(db.Courses.ToList(), "ID", "Name");
+                    break;
+            }
             return View();
         }
 
@@ -53,7 +76,17 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name", assignment.CourseID);
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.CourseID = new SelectList(db.Courses.Where(x => x.TeacherID == sessionID).ToList(), "ID", "Name");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.CourseID = new SelectList(db.Courses.ToList(), "ID", "Name");
+                    break;
+            }
             return View(assignment);
         }
 
@@ -69,7 +102,17 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name", assignment.CourseID);
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.CourseID = new SelectList(db.Courses.Where(x => x.TeacherID == sessionID).ToList(), "ID", "Name");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.CourseID = new SelectList(db.Courses.ToList(), "ID", "Name");
+                    break;
+            }
             return View(assignment);
         }
 
@@ -98,13 +141,24 @@ namespace ProjectEvalutionSystem.Controllers
                     }
 
                     assignment.Path = assignmentFile.FileName;
-                    assignment.CreationTimeStamp = DateTime.Now;
                 }
+
+                assignment.CreationTimeStamp = DateTime.Now;
                 db.Entry(assignment).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.CourseID = new SelectList(db.Courses, "ID", "Name", assignment.CourseID);
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.CourseID = new SelectList(db.Courses.Where(x => x.TeacherID == sessionID).ToList(), "ID", "Name");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.CourseID = new SelectList(db.Courses.ToList(), "ID", "Name");
+                    break;
+            }
             return View(assignment);
         }
 
@@ -129,8 +183,19 @@ namespace ProjectEvalutionSystem.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Assignment assignment = await db.Assignments.FindAsync(id);
+            
             db.Assignments.Remove(assignment);
             await db.SaveChangesAsync();
+
+            DirectoryInfo dir = new DirectoryInfo(Server.MapPath("~/App_Data/"));
+            var files = dir.GetFiles();
+            foreach (var item in files)
+            {
+                if (item.Name == assignment.Path)
+                {
+                    item.Delete();
+                }
+            }
             return RedirectToAction("Index");
         }
 

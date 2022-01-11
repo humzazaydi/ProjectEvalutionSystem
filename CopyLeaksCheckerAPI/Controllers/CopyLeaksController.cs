@@ -9,6 +9,8 @@ using Copyleaks.SDK.V3.API.Models.Types;
 using CopyLeaksCheckerAPI.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 using Polly;
 
 namespace CopyLeaksCheckerAPI.Controllers
@@ -20,8 +22,9 @@ namespace CopyLeaksCheckerAPI.Controllers
         private HttpClient Client { get; set; }
         private CopyleaksIdentityApi IdentityClient { get; set; }
         private CopyleaksScansApi EducationAPIClient { get; set; }
+        private IHostingEnvironment _hostingEnvironment;
 
-        public const string USER_EMAIL = "<syedmohammadhumzazaydi@gmail.com>";
+        public const string USER_EMAIL = "syedmohammadhumzazaydi@gmail.com";
         public const string USER_KEY = "c7f6ee91-47d9-483c-9d8c-7b77f905a0bf";
 
         public CopyLeaksController()
@@ -35,6 +38,7 @@ namespace CopyLeaksCheckerAPI.Controllers
             Client = new HttpClient(handler);
             IdentityClient = new CopyleaksIdentityApi(Client);
             EducationAPIClient = new CopyleaksScansApi(eProduct.Education.ToString().ToLower(), Client);
+            _hostingEnvironment = new HostingEnvironment();
         }
 
         [HttpGet]
@@ -45,21 +49,23 @@ namespace CopyLeaksCheckerAPI.Controllers
             return new JsonResult(LoginResposne);
         }
 
-        [HttpGet]
-        public async Task SUBMIT_FILE_TEST()
+        [HttpGet("SubmitFileToCheck")]
+        public async Task SUBMIT_FILE_TEST([FromQuery] string fileName, string filePath)
         {
             var LoginResposne = await IdentityClient.LoginAsync(USER_EMAIL, USER_KEY).ConfigureAwait(false);
             var authToken = LoginResposne.Token;
 
-            var EducationBalance = await EducationAPIClient.CreditBalanceAsync(authToken).ConfigureAwait(false);
+            //var EducationBalance = await EducationAPIClient.CreditBalanceAsync(authToken).ConfigureAwait(false);
 
-            var scanId = await new StartChecking().SubmitEducationFileScanAsync(authToken).ConfigureAwait(false);
+            var scanId = await new StartChecking().SubmitEducationFileScanAsync(authToken,
+                Guid.NewGuid().ToString(),
+                filePath).ConfigureAwait(false);
 
             var progress = await Policy.HandleResult<uint>((result) => result != 100)
                 .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(3))
                 .ExecuteAsync(() => EducationAPIClient.ProgressAsync(scanId, authToken)).ConfigureAwait(false);
 
-            //Assert.IsTrue(progress == 100, "Scan Progress didn't hit the 100%");
+            Console.WriteLine(progress);
 
             //downloads
             var pdfReport = await EducationAPIClient.DownloadPdfReportAsync(scanId, authToken).ConfigureAwait(false);
@@ -69,11 +75,11 @@ namespace CopyLeaksCheckerAPI.Controllers
             //sandbox scan always have at least one internet result.
             var downloadedResult = await EducationAPIClient.DownloadResultAsync(scanId, results.Results.Internet[0].Id, authToken).ConfigureAwait(false);
 
-            await EducationAPIClient.DeleteAsync(new DeleteRequest
-            {
-                Scans = new DeleteScanItem[] { new DeleteScanItem { Id = scanId } },
-                Purge = true
-            }, authToken).ConfigureAwait(false);
+            //await EducationAPIClient.DeleteAsync(new DeleteRequest
+            //{
+            //    Scans = new DeleteScanItem[] { new DeleteScanItem { Id = scanId } },
+            //    Purge = true
+            //}, authToken).ConfigureAwait(false);
         }
 
         public async Task USER_USAGE_TEST(DateTime starDateTime, DateTime endDateTime)

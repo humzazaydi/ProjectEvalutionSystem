@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ProjectEvalutionSystem.Models.Cours>
+﻿@using ProjectEvalutionSystem.Models.Auth
+@model IEnumerable<ProjectEvalutionSystem.Models.Cours>
 
 @{
     ViewBag.Title = "Courses";
@@ -17,9 +18,22 @@
             </h3>
         </div>
         <div class="card-toolbar">
-            <a href="/Courses/Create" class="btn btn-sm btn-primary">
-                <i class="flaticon2-cube"></i> Add Course
-            </a>
+            @{
+                switch ((UserRole)Session["UserRole"])
+                {
+                    case UserRole.Teacher:
+                        <a href="/Courses/Create" class="btn btn-sm btn-primary">
+                            <i class="flaticon2-cube"></i> Add Course
+                        </a>
+                        break;
+
+                    case UserRole.SuperAdmin:
+                        <a href="/Courses/Create" class="btn btn-sm btn-primary">
+                            <i class="flaticon2-cube"></i> Add Course
+                        </a>
+                        break;
+                }
+            }
         </div>
     </div>
     <div class="separator separator-solid separator-white opacity-20"></div>
@@ -42,38 +56,70 @@
                     <th>
                         @Html.DisplayNameFor(model => model.CreationTimeStamp)
                     </th>
-                    <th>
-                        Actions
-                    </th>
+                    @{
+                        switch ((UserRole)Session["UserRole"])
+                        {
+                            case UserRole.Teacher:
+                                <th>
+                                    Actions
+                                </th>
+                                break;
+
+                            case UserRole.SuperAdmin:
+                                <th>
+                                    Actions
+                                </th>
+                                break;
+                        }
+                    }
+                    
                 </tr>
 
                 @foreach (var item in Model)
                 {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Teacher.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreationTimeStamp)
-                </td>
-                <td>
-                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group mr-2" role="group" aria-label="First group">
-                            <a href="/Courses/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>
-                            <a href="/Courses/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
-                        </div>
-                    </div>
-                </td>
-            </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Teacher.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationTimeStamp)
+                        </td>
+                        @{
+                            switch ((UserRole)Session["UserRole"])
+                            {
+                                case UserRole.Teacher:
+                                    <td>
+                                        <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                            <div class="btn-group mr-2" role="group" aria-label="First group">
+                                                <a href="/Courses/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning m-1"><i class="la la-pencil"></i> Update</button></a>
+                                                <a href="/Courses/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger m-1"><i class="la la-trash"></i> Trash</button></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    break;
+
+                                case UserRole.SuperAdmin:
+                                    <td>
+                                        <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                            <div class="btn-group mr-2" role="group" aria-label="First group">
+                                                <a href="/Courses/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning m-1"><i class="la la-pencil"></i> Update</button></a>
+                                                <a href="/Courses/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger m-1"><i class="la la-trash"></i> Trash</button></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    break;
+                            }
+                        }
+                    </tr>
                 }
 
             </table>

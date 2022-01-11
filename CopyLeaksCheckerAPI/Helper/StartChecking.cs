@@ -8,29 +8,24 @@ using Copyleaks.SDK.V3.API;
 using Copyleaks.SDK.V3.API.Models.Requests;
 using Copyleaks.SDK.V3.API.Models.Requests.Properties;
 using Copyleaks.SDK.V3.API.Models.Types;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Polly;
 
 namespace CopyLeaksCheckerAPI.Helper
 {
     public class StartChecking
     {
-        public const string WebhooksHost = "https://localhost:44310/Webhooks/";
-
-        private HttpClient Client { get; set; }
-        private CopyleaksIdentityApi IdentityClient { get; set; }
-        private CopyleaksScansApi EducationAPIClient { get; set; }
+        public const string WebhooksHost = "https://localhost:44310/api/Webhooks/";
+        private CopyleaksScansApi EducationAPIClient = new CopyleaksScansApi(eProduct.Education);
         
-        public async Task<string> SubmitEducationFileScanAsync(string authToken)
+        public async Task<string> SubmitEducationFileScanAsync(string authToken,string scanId, string path)
         {
-            // A unique scan ID for the scan
-            // In case this scan ID already exists for this user Copyleaks API will return HTTP 409 Conflict result
-            string scanId = Guid.NewGuid().ToString();
-            string scannedText = "Hellow world";
-            // Submit a file for scan in https://api.copyleaks.com
+            string scannedText = ConvertFileToString(path);
+
             await EducationAPIClient.SubmitFileAsync(scanId, new FileDocument
             {
-                Base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(scannedText)),
-                Filename = "text.txt",
+                Base64 = scannedText,
+                Filename = "Test.docx",
                 PropertiesSection = GetScanPropertiesByProduct(scanId, eProduct.Education)
             },
             authToken).ConfigureAwait(false);
@@ -69,6 +64,19 @@ namespace CopyLeaksCheckerAPI.Helper
             scanProperties.Sandbox = true;
 
             return scanProperties;
+        }
+
+        public string ConvertFileToString(string path)
+        {
+            try
+            {
+                var bytes = File.ReadAllBytes(@path);
+                return Convert.ToBase64String(bytes);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
     }
 }

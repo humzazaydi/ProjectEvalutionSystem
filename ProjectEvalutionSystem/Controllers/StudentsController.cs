@@ -24,7 +24,17 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Exception", "ErrorHandling");
             }
 
-            return View(db.Students.ToList());
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    return View(db.Students.Where(x => x.TeacherID == sessionID).ToList());
+
+                case UserRole.SuperAdmin:
+                    return View(db.Students.ToList());
+            }
+
+            return View(new List<Student>());
         }
 
         // GET: Students/Create
@@ -36,7 +46,18 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Exception", "ErrorHandling");
             }
 
-            ViewBag.TeacherID = new SelectList(db.Teachers.ToList(), "ID", "FullName");
+            var sessionID = (int) Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.TeacherID = new SelectList(db.Teachers.Where(x=> x.ID == sessionID).ToList(), "ID", "FullName");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.TeacherID = new SelectList(db.Teachers.ToList(), "ID", "FullName");
+                    break;
+            }
+            
             return View();
         }
 

@@ -38,6 +38,25 @@ function GetStats() {
                 $('#totalassignments').text(Math.ceil(now).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
             }
         });
+
+        $('#totalevaluation').prop('Counter', 0).animate({
+            Counter: data.evalutionIndexes
+        }, {
+            duration: 4000,
+            easing: 'swing',
+            step: function (now) {
+                $('#totalevaluation').text(Math.ceil(now).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            }
+        });
+        $('#totalcourses').prop('Counter', 0).animate({
+            Counter: data.courses
+        }, {
+            duration: 4000,
+            easing: 'swing',
+            step: function (now) {
+                $('#totalcourses').text(Math.ceil(now).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            }
+        });
     }
 }
 

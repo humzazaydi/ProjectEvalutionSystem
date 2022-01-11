@@ -33,7 +33,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.IsActive)
                     </th>
-                    <th></th>
+                    <th> Actions </th>
                 </tr>
 
                 @foreach (var item in Model)
@@ -61,8 +61,8 @@
                         <td>
                             <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group mr-2" role="group" aria-label="First group">
-                                    <a href="/admins/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning btn-icon"><i class="la la-pencil"></i></button></a>
-                                    <a href="/admins/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger btn-icon"><i class="la la-trash"></i></button></a>
+                                    <a href="/admins/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning m-1"><i class="la la-pencil"></i> Update</button></a>
+                                    <a href="/admins/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger m-1"><i class="la la-trash"></i> Trash</button></a>
                                 </div>
                             </div>
                         </td>

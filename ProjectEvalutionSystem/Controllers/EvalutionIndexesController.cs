@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using ProjectEvalutionSystem.Helper;
 using ProjectEvalutionSystem.Models;
+using ProjectEvalutionSystem.Models.Auth;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -18,13 +21,41 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: EvalutionIndexes
         public async Task<ActionResult> Index()
         {
-            var evalutionIndexes = db.EvalutionIndexes.Include(e => e.Assignment);
+            IQueryable<EvalutionIndex> evalutionIndexes = null;
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    evalutionIndexes = db.EvalutionIndexes
+                        .Include(a => a.Assignment)
+                        .Include(x=> x.Assignment.Cours)
+                        .Where(x => x.Assignment.Cours.TeacherID == sessionID);
+                    break;
+
+                case UserRole.SuperAdmin:
+                    evalutionIndexes = db.EvalutionIndexes.Include(a => a.Assignment);
+                    break;
+            }
+
             return View(await evalutionIndexes.ToListAsync());
         }
         // GET: EvalutionIndexes/Create
         public ActionResult Create()
         {
-            ViewBag.Assignment = new SelectList(db.Assignments, "ID", "Name");
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.AssignmentID = new SelectList(db.Assignments
+                        .Include(x=> x.Cours)
+                        .Where(x => x.Cours.TeacherID == sessionID).ToList(), "ID", "Name");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.AssignmentID = new SelectList(db.Assignments.ToList(), "ID", "Name");
+                    break;
+            }
+
             return View();
         }
 
@@ -33,7 +64,7 @@ namespace ProjectEvalutionSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,SubmissionDate,Remarks,Comments,Assignment")] EvalutionIndex evalutionIndex)
+        public async Task<ActionResult> Create([Bind(Include = "ID,SubmissionDate,Remarks,Comments,AssignmentID")] EvalutionIndex evalutionIndex)
         {
             evalutionIndex.EvalutionDate = DateTime.Now;
             db.EvalutionIndexes.Add(evalutionIndex);
@@ -53,7 +84,19 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.AssignmentID = new SelectList(db.Assignments, "ID", "Name", evalutionIndex.AssignmentID);
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.AssignmentID = new SelectList(db.Assignments
+                        .Include(x => x.Cours)
+                        .Where(x => x.Cours.TeacherID == sessionID).ToList(), "ID", "Name");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.AssignmentID = new SelectList(db.Assignments.ToList(), "ID", "Name");
+                    break;
+            }
             return View(evalutionIndex);
         }
 
@@ -76,7 +119,19 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Assignment = new SelectList(db.Assignments, "ID", "Name", evalutionIndex.AssignmentID);
+            var sessionID = (int)Session["CurrentLoginId"];
+            switch ((UserRole)Session["UserRole"])
+            {
+                case UserRole.Teacher:
+                    ViewBag.Assignment = new SelectList(db.Assignments
+                        .Include(x => x.Cours)
+                        .Where(x => x.Cours.TeacherID == sessionID).ToList(), "ID", "Name");
+                    break;
+
+                case UserRole.SuperAdmin:
+                    ViewBag.Assignment = new SelectList(db.Assignments.ToList(), "ID", "Name");
+                    break;
+            }
             return View();
 
         }
@@ -107,10 +162,16 @@ namespace ProjectEvalutionSystem.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet, ActionName("StartEvaluation")]
-        public async Task<ActionResult> StartEvaluation(int id)
+        [HttpGet]
+        public async Task StartEvaluation(int id)
         {
-            return View();
+            EvalutionIndex evalutionIndex = await db.EvalutionIndexes.Include(x=> x.Assignment).FirstOrDefaultAsync(x=> x.ID == id);
+
+            Assignment assignment = evalutionIndex.Assignment;
+
+            var fileText = System.IO.File.ReadAllText(Path.Combine(Server.MapPath("~/App_Data/"), assignment.Path));
+
+            CheckPlagiarism.StartProcess(fileText);
         }
 
         protected override void Dispose(bool disposing)
