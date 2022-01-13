@@ -35,6 +35,12 @@ namespace ProjectEvalutionSystem.Controllers
                 case UserRole.SuperAdmin:
                     evalutionIndexes = db.EvalutionIndexes.Include(a => a.Assignment);
                     break;
+                case UserRole.Student:
+                    evalutionIndexes = db.EvalutionIndexes
+                        .Include(a => a.Assignment)
+                        .Include(x => x.Assignment.Cours)
+                        .Where(x => x.Assignment.StudentID == sessionID);
+                    break;
             }
 
             return View(await evalutionIndexes.ToListAsync());
@@ -163,15 +169,20 @@ namespace ProjectEvalutionSystem.Controllers
         }
 
         [HttpGet]
-        public async Task StartEvaluation(int id)
-        {
+        public async Task<ActionResult> StartEvaluation(int id)
+        { 
             EvalutionIndex evalutionIndex = await db.EvalutionIndexes.Include(x=> x.Assignment).FirstOrDefaultAsync(x=> x.ID == id);
 
             Assignment assignment = evalutionIndex.Assignment;
 
             var fileText = System.IO.File.ReadAllText(Path.Combine(Server.MapPath("~/App_Data/"), assignment.Path));
 
-            CheckPlagiarism.StartProcess(fileText);
+            CheckPlagiarismResponse response = CheckPlagiarism.StartProcess(fileText, id);
+            
+            ViewBag.PlagCount = response.PlagCount;
+            ViewBag.UniqueCount = response.UniqueCount;
+            ViewBag.Websites = response.matchingUrls;
+            return View();
         }
 
         protected override void Dispose(bool disposing)

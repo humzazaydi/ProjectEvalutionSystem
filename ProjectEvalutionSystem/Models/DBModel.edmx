@@ -28,6 +28,7 @@
           <Property Name="CourseID" Type="int" />
           <Property Name="IsDeleted" Type="bit" />
           <Property Name="CreationTimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="StudentID" Type="int" />
         </EntityType>
         <EntityType Name="Courses">
           <Key>
@@ -52,6 +53,10 @@
           <Property Name="Remarks" Type="nvarchar(max)" />
           <Property Name="Comments" Type="nvarchar(max)" />
           <Property Name="AssignmentID" Type="int" />
+          <Property Name="IsCompleted" Type="bit" />
+          <Property Name="PlagCount" Type="nvarchar" MaxLength="50" />
+          <Property Name="UniqueCount" Type="nvarchar" MaxLength="50" />
+          <Property Name="MatchesUrls" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Students">
           <Key>
@@ -183,6 +188,7 @@
           <Property Name="CourseID" Type="Int32" />
           <Property Name="IsDeleted" Type="Boolean" />
           <Property Name="CreationTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StudentID" Type="Int32" />
           <NavigationProperty Name="Cours" Relationship="ProjectEvalutionSystemModel.FK_Assignments_Courses" FromRole="Assignment" ToRole="Cours" />
           <NavigationProperty Name="EvalutionIndexes" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" FromRole="Assignment" ToRole="EvalutionIndex" />
         </EntityType>
@@ -211,6 +217,10 @@
           <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AssignmentID" Type="Int32" />
+          <Property Name="IsCompleted" Type="Boolean" />
+          <Property Name="PlagCount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UniqueCount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MatchesUrls" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Assignment" Relationship="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" FromRole="EvalutionIndex" ToRole="Assignment" />
         </EntityType>
         <EntityType Name="Student">
@@ -299,6 +309,7 @@
           <EntitySetMapping Name="Assignments">
             <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.Assignment">
               <MappingFragment StoreEntitySet="Assignments">
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
                 <ScalarProperty Name="CreationTimeStamp" ColumnName="CreationTimeStamp" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="CourseID" ColumnName="CourseID" />
@@ -326,6 +337,10 @@
           <EntitySetMapping Name="EvalutionIndexes">
             <EntityTypeMapping TypeName="ProjectEvalutionSystemModel.EvalutionIndex">
               <MappingFragment StoreEntitySet="EvalutionIndex">
+                <ScalarProperty Name="MatchesUrls" ColumnName="MatchesUrls" />
+                <ScalarProperty Name="UniqueCount" ColumnName="UniqueCount" />
+                <ScalarProperty Name="PlagCount" ColumnName="PlagCount" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
                 <ScalarProperty Name="AssignmentID" ColumnName="AssignmentID" />
                 <ScalarProperty Name="Comments" ColumnName="Comments" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />

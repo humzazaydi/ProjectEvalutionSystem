@@ -136,6 +136,29 @@ namespace ProjectEvalutionSystem.Controllers
                 return RedirectToAction("Exception", "ErrorHandling");
             }
             Teacher teacher = db.Teachers.Find(id);
+
+            List<Cours> courses = db.Courses.Where(x => x.TeacherID == id).ToList();
+            foreach (var cours in courses)
+            {
+                var assignments = db.Assignments.Where(x => x.CourseID == cours.ID).ToList();
+                foreach (var assign in assignments)
+                {
+                    var evaluationIndex = db.EvalutionIndexes.Where(x => x.AssignmentID == assign.ID).ToList();
+                    foreach (var index in evaluationIndex)
+                    {
+                        db.EvalutionIndexes.Remove(index);
+                        db.SaveChanges();
+                    }
+
+                    db.Assignments.Remove(assign);
+                    db.SaveChanges();
+                    continue;
+                }
+
+                db.Courses.Remove(cours);
+                db.SaveChanges();
+            }
+
             db.Teachers.Remove(teacher);
             db.SaveChanges();
             return RedirectToAction("Index");

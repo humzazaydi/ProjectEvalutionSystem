@@ -14,7 +14,6 @@ D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\bin\Debug\net5.0\Polly.dl
 D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\obj\Debug\net5.0\CopyLeaksCheckerAPI.csproj.AssemblyReference.cache
 D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\obj\Debug\net5.0\CopyLeaksCheckerAPI.GeneratedMSBuildEditorConfig.editorconfig
 D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\obj\Debug\net5.0\CopyLeaksCheckerAPI.AssemblyInfoInputs.cache
 D:\Projects\ProjectEvalutionSystem\CopyLeaksCheckerAPI\obj\Debug\net5.0\CopyLeaksCheckerAPI.AssemblyInfo.cs

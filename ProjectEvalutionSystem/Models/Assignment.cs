@@ -27,6 +27,7 @@ namespace ProjectEvalutionSystem.Models
         public Nullable<int> CourseID { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
         public System.DateTime CreationTimeStamp { get; set; }
+        public Nullable<int> StudentID { get; set; }
     
         public virtual Cours Cours { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

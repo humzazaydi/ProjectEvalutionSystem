@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.WebPages;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using ProjectEvalutionSystem.Models;
 
 namespace ProjectEvalutionSystem.Helper
 {
@@ -18,8 +21,15 @@ namespace ProjectEvalutionSystem.Helper
             ConfigurationManager.AppSettings["seleniumBrowserDirectory"].ToString());
 
         public static ChromeDriver _driver = new ChromeDriver(chromeDriverDirectory);
-        public static void StartProcess(string text)
+        public static CheckPlagiarismResponse StartProcess(string text,int evalutionIndexId)
         {
+            string PlagCount = string.Empty;
+            string UniqueCount = string.Empty;
+            string matchesText = string.Empty;
+            string regexMatchesUrls = string.Empty;
+
+            _driver = new ChromeDriver(chromeDriverDirectory);
+
             _driver.Navigate().GoToUrl(ConfigurationManager.AppSettings["PlagiarismCheckerURL"].ToString());
             _driver.Manage().Window.Maximize();
 
@@ -32,19 +42,18 @@ namespace ProjectEvalutionSystem.Helper
                 _driver.ExecuteScript("onSubmit()");
             }
 
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
 
             var uniqueCount = _driver.FindElement(By.Id("uniqueCount"));
             if (uniqueCount.Displayed == true)
             {
-                var UniqueCount = uniqueCount.Text;
+                UniqueCount = uniqueCount.Text;
             }
 
             var plagCount = _driver.FindElement(By.Id("plagCount"));
             if (plagCount.Displayed == true)
             {
-                var PlagCount = plagCount.Text;
-                //onSubmit()
+                PlagCount = plagCount.Text;
             }
 
 
@@ -52,18 +61,58 @@ namespace ProjectEvalutionSystem.Helper
             if (MatchUrls.Displayed == true)
             {
                 MatchUrls.Click();
+                Thread.Sleep(1000);
+                var matchesTableDiv = _driver.FindElement(By.Id("matches"));
+                if (matchesTableDiv.Displayed == true)
+                {
+                    var matcheTable = _driver.FindElement(By.ClassName("match_table"));
+                    if (matchesTableDiv.Displayed == true)
+                    {
+                        matchesText = matchesTableDiv.Text;
+                        var linkParser = new Regex(@"\b(?:https?://|www\.)\S+\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                        foreach (Match m in linkParser.Matches(matchesText))
+                        {
+                            regexMatchesUrls = regexMatchesUrls + ", " + m;
+                        }
+                    }
+                    else
+                    {
+                        matchesText = matcheTable.Text;
+                    }
+                }
             }
 
 
-            var matchesTable = _driver.FindElement(By.Id("matches"));
-            if (matchesTable.Displayed == true)
+            using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
             {
-                var matchesText = matchesTable.;
+                var evalutionIndex = _context.EvalutionIndexes.Find(evalutionIndexId);
+                evalutionIndex.Remarks = Convert.ToInt32(PlagCount) == 0 ? "Passed with 0% Plagiarism." : "Failed with " + Convert.ToInt32(PlagCount) + "% Plagiarism";
+                evalutionIndex.Comments = matchesText != "" ? "No sources found against your content.." : matchesText;
+                evalutionIndex.IsCompleted = true;
+                evalutionIndex.PlagCount = PlagCount;
+                evalutionIndex.UniqueCount = UniqueCount;
+                evalutionIndex.MatchesUrls = regexMatchesUrls;
+
+                _context.Entry(evalutionIndex).State = EntityState.Modified;
+                _context.SaveChanges();
             }
 
 
             _driver.Close();
 
+            return new CheckPlagiarismResponse
+            {
+                UniqueCount = UniqueCount + "%",
+                PlagCount = PlagCount + "%",
+                matchingUrls = regexMatchesUrls.Split(',')
+            };
         }
+    }
+
+    public class CheckPlagiarismResponse
+    {
+        public string UniqueCount { get; set; }
+        public string PlagCount { get; set; }
+        public string[] matchingUrls  { get; set; }
     }
 }

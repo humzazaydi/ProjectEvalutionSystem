@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "StartEvaluation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex flex-column flex-root">
+    <!--begin::Error-->
+    <div class="d-flex flex-row-fluid flex-column bgi-size-cover bgi-position-center bgi-no-repeat p-10 p-sm-30" style="background-image: url(~/assets/media/error/bg1.jpg);">
+        <!--begin::Content-->
+        <h1 class="font-weight-boldest text-dark-75 mt-15" style="font-size: 10rem">Completed</h1>
+        <p class="font-size-h3 text-muted font-weight-normal">@ViewBag.CompleteRequest</p>
+        <div class="card card-custom gutter-b bg-light-success">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                    <div class="d-flex flex-column mr-5">
+                        <a href="#" class="h4 text-dark text-hover-primary">
+                            Uniqueness
+                        </a>
+                    </div>
+                    <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
+                        <h1 class="font-weight-boldest text-success mt-15" style="font-size: 3rem">@ViewBag.UniqueCount</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card card-custom gutter-b bg-light-danger">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                    <div class="d-flex flex-column mr-5">
+                        <a href="#" class="h4 text-dark text-hover-primary">
+                            Plagiarized
+                        </a>
+                    </div>
+                    <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
+                        <h1 class="font-weight-boldest text-danger mt-15" style="font-size: 3rem">@ViewBag.PlagCount</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="card card-custom card-stretch gutter-b">
+            <!--begin::Header-->
+            <div class="card-header border-0">
+                <h3 class="card-title font-weight-bolder text-dark">Websites</h3>
+                <div class="card-toolbar">
+                    <a href="/EvalutionIndexes/index" class="btn btn-sm btn-primary">
+                        <i class="flaticon2-cube"></i> Back to List
+                    </a>
+                </div>
+            </div>
+            <!--end::Header-->
+            <!--begin::Body-->
+            <div class="card-body pt-0">
+                @{
+                    foreach (var item in ViewBag.Websites)
+                    {
+                        if (!string.IsNullOrEmpty(item))
+                        {
+                            <!--begin::Content-->
+                            <div class="d-flex align-items-center flex-grow-1">
+                                <!--begin::Checkbox-->
+                                <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
+                                    <input type="checkbox" value="1">
+                                    <span></span>
+                                </label>
+                                <!--end::Checkbox-->
+                                <!--begin::Section-->
+                                <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
+                                    <!--begin::Info-->
+                                    <div class="d-flex flex-column align-items-cente py-2 w-75">
+                                        <!--begin::Title-->
+                                        <a href="@item" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">@item</a>
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Info-->
+                                    <!--begin::Label-->
+                                    <span class="label label-lg label-light-danger label-inline font-weight-bold py-4">Plagiarized</span>
+                                    <!--end::Label-->
+                                </div>
+                                <!--end::Section-->
+                            </div>
+                            <!--end::Content-->
+                        }
+                    }
+                }
+                <!--end: Item-->
+            </div>
+            <!--end: Card Body-->
+        </div>
+    
+
+    <!--end::Content-->
+    </div>
+    <!--end::Error-->
+</div>
+

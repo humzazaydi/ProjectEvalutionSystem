@@ -5,12 +5,12 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="3e62e600c457458e8963e2ce18e1fdbb" Name="Diagram1">
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Admin" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Admin" Width="1.5" PointX="0.75" PointY="5.75" />
         <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Assignment" Width="1.5" PointX="5.25" PointY="1.125" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Cours" Width="1.5" PointX="3" PointY="1" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.EvalutionIndex" Width="1.5" PointX="7.5" PointY="1.25" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Student" Width="1.5" PointX="2.75" PointY="4.75" />
-        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Teacher" Width="1.5" PointX="0.75" PointY="1.125" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Cours" Width="1.5" PointX="3" PointY="1.125" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.EvalutionIndex" Width="1.5" PointX="7.5" PointY="1" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Student" Width="1.5" PointX="2.75" PointY="5.75" />
+        <EntityTypeShape EntityType="ProjectEvalutionSystemModel.Teacher" Width="1.5" PointX="0.75" PointY="1.25" />
         <AssociationConnector Association="ProjectEvalutionSystemModel.FK_Assignments_Courses" />
         <AssociationConnector Association="ProjectEvalutionSystemModel.FK_EvalutionIndex_Assignments" />
         <AssociationConnector Association="ProjectEvalutionSystemModel.FK_Courses_Teacher" />

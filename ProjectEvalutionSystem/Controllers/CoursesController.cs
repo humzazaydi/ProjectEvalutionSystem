@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using ProjectEvalutionSystem.Models;
 using ProjectEvalutionSystem.Models.Auth;
+using WebGrease.Css.Extensions;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -29,6 +30,10 @@ namespace ProjectEvalutionSystem.Controllers
 
                 case UserRole.SuperAdmin:
                     courses = db.Courses.Include(a => a.Teacher);
+                    break;
+                case UserRole.Student:
+                    var TeacherID = (int)db.Students.Where(x => x.ID == sessionID).Select(x => x.TeacherID).FirstOrDefault();
+                    courses = db.Courses.Include(a => a.Teacher).Include(x=> x.Assignments).Where(x=> x.TeacherID == TeacherID);
                     break;
             }
 

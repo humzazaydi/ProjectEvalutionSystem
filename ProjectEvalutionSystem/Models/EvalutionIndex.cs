@@ -20,6 +20,10 @@ namespace ProjectEvalutionSystem.Models
         public string Remarks { get; set; }
         public string Comments { get; set; }
         public Nullable<int> AssignmentID { get; set; }
+        public Nullable<bool> IsCompleted { get; set; }
+        public string PlagCount { get; set; }
+        public string UniqueCount { get; set; }
+        public string MatchesUrls { get; set; }
     
         public virtual Assignment Assignment { get; set; }
     }

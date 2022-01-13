@@ -125,67 +125,82 @@
             </div>
         </div>
         <div class="card-body">
-            @*@{
-                    if (Model.Any())
-                    {
-                        <table class="table table-bordered table-hover">
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ID)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Description)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.IsDeleted)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.CreationTimeStamp)
-                                </th>
-                            </tr>
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Path)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsDeleted)
+                    </th>
+                    <th>
+                        Course
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
 
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ID)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td>
-                                        @{
-                                            if (!Convert.ToBoolean(item.IsDeleted))
-                                            {
-                                                <span class="label label-success label-inline mr-2">Active</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="label label-danger label-inline mr-2">In Active</span>
-                                            }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Path)
+                        </td>
+                        <td>
+                            @{
+                                if (Convert.ToBoolean(item.IsDeleted) != null && Convert.ToBoolean(item.IsDeleted))
+                                {
+                                    <span class="label label-danger label-inline mr-2">Deleted</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-success label-inline mr-2">Active</span>
+                                }
 
-                                        }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CreationTimeStamp)
-                                    </td>
-                                </tr>
                             }
-                        </table>
-                    }
-                    else
-                    {
-                        <h3 class="card-label text-center">
-                            No Data
-                        </h3>
-                    }
-                }*@
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cours.Name)
+                        </td>
+                        <td>
+                            <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                    <a href="/Assignments/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning m-1"><i class="la la-pencil"></i> Update</button></a>
+
+                                    @{
+                                        switch ((UserRole)Session["UserRole"])
+                                        {
+                                            case UserRole.Teacher:
+
+                                                <a href="/Assignments/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger m-1"><i class="la la-trash"></i> Trash</button></a>
+                                                break;
+
+                                            case UserRole.SuperAdmin:
+
+                                                <a href="/Assignments/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger m-1"><i class="la la-trash"></i> Trash</button></a>
+                                                break;
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </table>
         </div>
     </div>
 </div>
