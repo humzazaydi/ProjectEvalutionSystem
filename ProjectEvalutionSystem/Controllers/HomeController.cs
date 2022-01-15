@@ -107,5 +107,87 @@ namespace ProjectEvalutionSystem.Controllers
                 throw;
             }
         }
+
+        [HttpPost]
+        public async Task<JsonResult> ChangeSettings(ChangeSettingsDTO input)
+        {
+            try
+            {
+                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                {
+                    switch ((UserRole)input.user_role)
+                    {
+                        case UserRole.Student:
+                            var userDetails0 = await _context.Students.Where(x => x.ID == input.id)
+                                .FirstOrDefaultAsync();
+                            if (userDetails0 != null)
+                            {
+                                userDetails0.Password = input.new_password;
+                                _context.Entry(userDetails0).State = EntityState.Modified;
+                                await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                return Json(new
+                                {
+                                    message = "Student not found",
+                                    code = 404,
+                                    success = false,
+                                }, JsonRequestBehavior.AllowGet);
+                            }
+                            break;
+                        case UserRole.Teacher:
+                            var userDetails1 = await _context.Teachers.Where(x => x.ID == input.id)
+                                .FirstOrDefaultAsync();
+                            if (userDetails1 != null)
+                            {
+                                userDetails1.Password = input.new_password;
+                                _context.Entry(userDetails1).State = EntityState.Modified;
+                                await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                return Json(new
+                                {
+                                    message = "Teacher not found",
+                                    code = 404,
+                                    success = false,
+                                }, JsonRequestBehavior.AllowGet);
+                            }
+                            break;
+                        case UserRole.SuperAdmin:
+                            var userDetails2 = await _context.Admins.Where(x => x.ID == input.id)
+                                .FirstOrDefaultAsync();
+                            if (userDetails2 != null)
+                            {
+                                userDetails2.Password = input.new_password;
+                                _context.Entry(userDetails2).State = EntityState.Modified;
+                                await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                return Json(new
+                                {
+                                    message = "Admin not found",
+                                    code = 404,
+                                    success = false,
+                                }, JsonRequestBehavior.AllowGet);
+                            }
+                            break;
+                    }
+
+                    return Json(new
+                    {
+                        message = "Password has been changed!",
+                        code = 200,
+                        success = true,
+                    }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

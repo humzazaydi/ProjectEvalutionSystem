@@ -7,6 +7,8 @@
 });
 $(document).ready(function () {
 
+    $('#divAreaPasswordChange').hide(500);
+
     FormValidationEvents()
 
     //toaster
@@ -1584,3 +1586,97 @@ function getCookie(name) {
 function eraseCookie(name) {
     document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
+
+
+$('#changePasswordModal').click(function (e) {
+    $('#divAreaPasswordChange').show(500);
+})
+$('#btnChangePassword').click(function (e) {
+    //new_password
+    //confirm_password
+
+    var _newPassword = $('#new_password').val()
+
+    var _confirmPassword = $('#confirm_password').val()
+
+    if (_newPassword != _confirmPassword) {
+        swal.fire({
+            title: "Oops!",
+            text: "Password doesn't matched!",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+                confirmButton: "btn font-weight-bold btn-light-primary"
+            }
+        }).then(function () {
+            KTUtil.scrollTop();
+        });
+    }
+    else if (_newPassword == '') {
+        swal.fire({
+            title: "Oops!",
+            text: "Fill all inputs",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+                confirmButton: "btn font-weight-bold btn-light-primary"
+            }
+        }).then(function () {
+            KTUtil.scrollTop();
+        });
+    }
+    else if (_confirmPassword == '') {
+        swal.fire({
+            title: "Oops!",
+            text: "Fill all inputs",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+                confirmButton: "btn font-weight-bold btn-light-primary"
+            }
+        }).then(function () {
+            KTUtil.scrollTop();
+        });
+    }
+    else {
+        e.preventDefault();
+        var params = {
+            id: $('#txtLoginUserId').val(),
+            new_password: _confirmPassword,
+            user_role: $('#txtUserRole').val()
+        }
+        AjaxCall('/Home/ChangeSettings', JSON.stringify(params), 'POST', onsuccess);
+        function onsuccess(response) {
+            if (response.success === true) {
+                swal.fire({
+                    title:"Done!",
+                    text: response.message,
+                    icon: "success",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn font-weight-bold btn-light-primary"
+                    }
+                }).then(function () {
+                    KTUtil.scrollTop();
+                });
+                $('#divAreaPasswordChange').hide(500);
+            } else {
+                swal.fire({
+                    text: response.message,
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn font-weight-bold btn-light-primary"
+                    }
+                }).then(function () {
+                    KTUtil.scrollTop();
+                });
+            }
+        }
+    }
+})

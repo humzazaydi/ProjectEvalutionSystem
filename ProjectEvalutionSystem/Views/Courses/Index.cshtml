@@ -53,9 +53,6 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Teacher)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreationTimeStamp)
-                    </th>
                     @{
                         switch ((UserRole)Session["UserRole"])
                         {
@@ -89,9 +86,6 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Teacher.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreationTimeStamp)
                         </td>
                         @{
                             switch ((UserRole)Session["UserRole"])

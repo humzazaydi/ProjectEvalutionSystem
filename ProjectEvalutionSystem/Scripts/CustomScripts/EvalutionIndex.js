@@ -176,7 +176,7 @@ $('#btnStartEva').click(function () {
             onSuccess
         )
         function onSuccess(data) {
-            debugger;
+             
         }
     }
 });

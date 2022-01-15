@@ -21,6 +21,12 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: EvalutionIndexes
         public async Task<ActionResult> Index()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             IQueryable<EvalutionIndex> evalutionIndexes = null;
             var sessionID = (int)Session["CurrentLoginId"];
             switch ((UserRole)Session["UserRole"])
@@ -48,6 +54,12 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: EvalutionIndexes/Create
         public ActionResult Create()
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             var sessionID = (int)Session["CurrentLoginId"];
             switch ((UserRole)Session["UserRole"])
             {
@@ -81,6 +93,12 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: EvalutionIndexes/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -145,6 +163,12 @@ namespace ProjectEvalutionSystem.Controllers
         // GET: EvalutionIndexes/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
+            if (Session["UserRole"] == null)
+            {
+                Session["ErrorException"] = "Please Login First";
+                return RedirectToAction("Exception", "ErrorHandling");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

@@ -20,4 +20,11 @@
         Teacher = 2,
         Student =3
     }
+
+    public class ChangeSettingsDTO
+    {
+        public int id { get; set; }
+        public string new_password { get; set; }
+        public UserRole user_role { get; set; }
+    }
 }
