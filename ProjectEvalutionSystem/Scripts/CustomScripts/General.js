@@ -1589,15 +1589,23 @@ function eraseCookie(name) {
 
 
 $('#changePasswordModal').click(function (e) {
-    $('#divAreaPasswordChange').show(500);
+    GetCurrentLoginInfo();
+    if ($('#divAreaPasswordChange').css('display') == 'none') {
+        $('#divAreaPasswordChange').show(500);
+    }
+    else {
+        $('#divAreaPasswordChange').hide(500);
+    }
 })
 $('#btnChangePassword').click(function (e) {
     //new_password
     //confirm_password
 
     var _newPassword = $('#new_password').val()
-
     var _confirmPassword = $('#confirm_password').val()
+    var _fullname = $('#txtfullname').val()
+    var _emailaddress = $('#txtEmailAddress').val()
+
 
     if (_newPassword != _confirmPassword) {
         swal.fire({
@@ -1641,18 +1649,48 @@ $('#btnChangePassword').click(function (e) {
             KTUtil.scrollTop();
         });
     }
+    else if (_fullname == '') {
+        swal.fire({
+            title: "Oops!",
+            text: "Fill all inputs",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+                confirmButton: "btn font-weight-bold btn-light-primary"
+            }
+        }).then(function () {
+            KTUtil.scrollTop();
+        });
+    }
+    else if (_emailaddress == '') {
+        swal.fire({
+            title: "Oops!",
+            text: "Fill all inputs",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+                confirmButton: "btn font-weight-bold btn-light-primary"
+            }
+        }).then(function () {
+            KTUtil.scrollTop();
+        });
+    }
     else {
         e.preventDefault();
         var params = {
             id: $('#txtLoginUserId').val(),
             new_password: _confirmPassword,
-            user_role: $('#txtUserRole').val()
+            user_role: $('#txtUserRole').val(),
+            fullname: $('#txtfullname').val(),
+            email_address: $('#txtEmailAddress').val()
         }
         AjaxCall('/Home/ChangeSettings', JSON.stringify(params), 'POST', onsuccess);
         function onsuccess(response) {
             if (response.success === true) {
                 swal.fire({
-                    title:"Done!",
+                    title: "Done!",
                     text: response.message,
                     icon: "success",
                     buttonsStyling: false,
@@ -1664,6 +1702,7 @@ $('#btnChangePassword').click(function (e) {
                     KTUtil.scrollTop();
                 });
                 $('#divAreaPasswordChange').hide(500);
+                GetCurrentLoginInfo();
             } else {
                 swal.fire({
                     text: response.message,
@@ -1680,3 +1719,11 @@ $('#btnChangePassword').click(function (e) {
         }
     }
 })
+
+function GetCurrentLoginInfo() {
+    AjaxCall('/Home/GetUserSettings', null, 'GET', onsuccess);
+    function onsuccess(response) {
+        $('#txtfullname').val(response.fullname)
+        $('#txtEmailAddress').val(response.emailaddress)
+    }
+}

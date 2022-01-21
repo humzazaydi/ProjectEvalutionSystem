@@ -25,6 +25,8 @@
     {
         public int id { get; set; }
         public string new_password { get; set; }
+        public string fullname { get; set; }
+        public string email_address { get; set; }
         public UserRole user_role { get; set; }
     }
 }

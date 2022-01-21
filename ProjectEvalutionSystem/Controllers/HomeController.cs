@@ -123,6 +123,8 @@ namespace ProjectEvalutionSystem.Controllers
                             if (userDetails0 != null)
                             {
                                 userDetails0.Password = input.new_password;
+                                userDetails0.FullName = input.fullname;
+                                userDetails0.EmailAddress = input.email_address;
                                 _context.Entry(userDetails0).State = EntityState.Modified;
                                 await _context.SaveChangesAsync();
                             }
@@ -142,6 +144,8 @@ namespace ProjectEvalutionSystem.Controllers
                             if (userDetails1 != null)
                             {
                                 userDetails1.Password = input.new_password;
+                                userDetails1.FullName = input.fullname;
+                                userDetails1.EmailAddress = input.email_address;
                                 _context.Entry(userDetails1).State = EntityState.Modified;
                                 await _context.SaveChangesAsync();
                             }
@@ -160,6 +164,8 @@ namespace ProjectEvalutionSystem.Controllers
                                 .FirstOrDefaultAsync();
                             if (userDetails2 != null)
                             {
+                                userDetails2.FullName = input.fullname;
+                                userDetails2.EmailAddress = input.email_address;
                                 userDetails2.Password = input.new_password;
                                 _context.Entry(userDetails2).State = EntityState.Modified;
                                 await _context.SaveChangesAsync();
@@ -181,6 +187,60 @@ namespace ProjectEvalutionSystem.Controllers
                         message = "Password has been changed!",
                         code = 200,
                         success = true,
+                    }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetUserSettings()
+        {
+            try
+            {
+                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                {
+                    var currentLoginId = (int) Session["CurrentLoginId"];
+                    switch ((UserRole)Session["UserRole"])
+                    {
+                        case UserRole.Student:
+                            var userDetails0 = await _context.Students.Where(x => x.ID == currentLoginId)
+                                .FirstOrDefaultAsync();
+                            Session["CurrentLoginName"] = userDetails0.FullName;
+                            Session["CurrentLoginEmail"] = userDetails0.EmailAddress;
+                            return Json(new
+                            {
+                                emailaddress = userDetails0.EmailAddress,
+                                fullname = userDetails0.FullName
+                            }, JsonRequestBehavior.AllowGet);
+                        case UserRole.Teacher:
+                            var userDetails1 = await _context.Teachers.Where(x => x.ID == currentLoginId)
+                                .FirstOrDefaultAsync();
+                            Session["CurrentLoginName"] = userDetails1.FullName;
+                            Session["CurrentLoginEmail"] = userDetails1.EmailAddress;
+                            return Json(new
+                            {
+                                emailaddress = userDetails1.EmailAddress,
+                                fullname = userDetails1.FullName
+                            }, JsonRequestBehavior.AllowGet);
+                        case UserRole.SuperAdmin:
+                            var userDetails2 = await _context.Admins.Where(x => x.ID == currentLoginId)
+                                .FirstOrDefaultAsync();
+                            Session["CurrentLoginName"] = userDetails2.FullName;
+                            Session["CurrentLoginEmail"] = userDetails2.EmailAddress;
+                            return Json(new
+                            {
+                                emailaddress = userDetails2.EmailAddress,
+                                fullname = userDetails2.FullName
+                            }, JsonRequestBehavior.AllowGet);
+                    }
+                    return Json(new
+                    {
+                        emailaddress = "",
+                        fullname = ""
                     }, JsonRequestBehavior.AllowGet);
                 }
             }

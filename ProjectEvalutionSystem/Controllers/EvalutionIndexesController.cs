@@ -201,7 +201,7 @@ namespace ProjectEvalutionSystem.Controllers
 
             var fileText = System.IO.File.ReadAllText(Path.Combine(Server.MapPath("~/App_Data/"), assignment.Path));
 
-            CheckPlagiarismResponse response = CheckPlagiarism.StartProcess(fileText, id);
+             CheckPlagiarismResponse response = CheckPlagiarism.StartProcess(fileText, id);
             
             ViewBag.PlagCount = response.PlagCount;
             ViewBag.UniqueCount = response.UniqueCount;

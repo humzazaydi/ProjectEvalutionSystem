@@ -63,7 +63,7 @@ namespace ProjectEvalutionSystem.Controllers
 
                 case UserRole.SuperAdmin:
                     ViewBag.CourseID = new SelectList(db.Courses.ToList(), "ID", "Name");
-                    ViewBag.StudentID = new SelectList(db.Students.ToList(), "ID", "Name");
+                    ViewBag.StudentID = new SelectList(db.Students.ToList(), "ID", "FullName");
                     break;
                 case UserRole.Student:
                     var teacherId = db.Students.Where(x => x.ID == sessionID).Select(x => x.TeacherID).FirstOrDefault();
