@@ -218,3 +218,6 @@ D:\Projects\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Debug\ProjectEvalu
 D:\Projects\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Debug\ProjectEvalutionSystem.csproj.CopyComplete
 D:\Projects\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Debug\ProjectEvalutionSystem.dll
 D:\Projects\ProjectEvalutionSystem\ProjectEvalutionSystem\obj\Debug\ProjectEvalutionSystem.pdb
+D:\Projects\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\EvoPdfToText.dll
+D:\Projects\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\EvoPdfToText.xml
+D:\Projects\ProjectEvalutionSystem\ProjectEvalutionSystem\bin\evopdftotext.dat

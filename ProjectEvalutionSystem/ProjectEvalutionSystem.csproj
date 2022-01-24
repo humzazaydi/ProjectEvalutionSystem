@@ -57,6 +57,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EvoPdfToText, Version=8.0.0.0, Culture=neutral, PublicKeyToken=e1fcbb86597de299, processorArchitecture=MSIL">
+      <HintPath>..\packages\EvoPdf.PdfToText.8.0.0\lib\net40\EvoPdfToText.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Html.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Html.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Html.Abstractions.dll</HintPath>
     </Reference>
@@ -378,6 +381,7 @@
     <Content Include="Content\assets\css\themes\layout\header\menu\dark.min.css" />
     <Content Include="Content\assets\css\themes\layout\header\menu\light.css" />
     <Content Include="Content\assets\css\themes\layout\header\menu\light.min.css" />
+    <Content Include="Helper\Browser\chromedriver.exe" />
     <Content Include="Scripts\CustomScripts\AddStudent.js" />
     <Content Include="Scripts\CustomScripts\CreateAssignment.js" />
     <Content Include="Scripts\CustomScripts\Dashboard.js" />

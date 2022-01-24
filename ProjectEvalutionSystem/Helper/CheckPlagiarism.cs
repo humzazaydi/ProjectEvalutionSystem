@@ -17,18 +17,24 @@ namespace ProjectEvalutionSystem.Helper
 {
     public class CheckPlagiarism
     {
-        public static string chromeDriverDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-            ConfigurationManager.AppSettings["seleniumBrowserDirectory"].ToString());
-
-        public static ChromeDriver _driver = new ChromeDriver(chromeDriverDirectory);
+        public static ChromeDriver _driver;
         public static CheckPlagiarismResponse StartProcess(string text,int evalutionIndexId)
         {
+            string chromeDriverDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                ConfigurationManager.AppSettings["seleniumBrowserDirectory"].ToString());
+
+            var options = new ChromeOptions();
+            options.AddArguments(new List<string> { { "start-maximized" } });
+
+            _driver = new ChromeDriver(chromeDriverDirectory, options);
+
             string PlagCount = string.Empty;
             string UniqueCount = string.Empty;
             string matchesText = string.Empty;
             string regexMatchesUrls = string.Empty;
 
-            _driver = new ChromeDriver(chromeDriverDirectory);
+            
+            
 
             _driver.Navigate().GoToUrl(ConfigurationManager.AppSettings["PlagiarismCheckerURL"].ToString());
             _driver.Manage().Window.Maximize();

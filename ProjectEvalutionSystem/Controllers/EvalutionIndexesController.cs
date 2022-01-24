@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using EvoPdf.PdfToText;
 using ProjectEvalutionSystem.Helper;
 using ProjectEvalutionSystem.Models;
 using ProjectEvalutionSystem.Models.Auth;
@@ -34,7 +35,7 @@ namespace ProjectEvalutionSystem.Controllers
                 case UserRole.Teacher:
                     evalutionIndexes = db.EvalutionIndexes
                         .Include(a => a.Assignment)
-                        .Include(x=> x.Assignment.Cours)
+                        .Include(x => x.Assignment.Cours)
                         .Where(x => x.Assignment.Cours.TeacherID == sessionID);
                     break;
 
@@ -65,7 +66,7 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 case UserRole.Teacher:
                     ViewBag.AssignmentID = new SelectList(db.Assignments
-                        .Include(x=> x.Cours)
+                        .Include(x => x.Cours)
                         .Where(x => x.Cours.TeacherID == sessionID).ToList(), "ID", "Name");
                     break;
 
@@ -132,7 +133,7 @@ namespace ProjectEvalutionSystem.Controllers
         public async Task<ActionResult> Edit([Bind(Include = "ID,SubmissionDate,Remarks,Comments,AssignmentID")] EvalutionIndex evalutionIndex)
         {
             var GetevalutionIndex = await db.EvalutionIndexes.FindAsync(evalutionIndex.ID);
-            if (GetevalutionIndex !=null)
+            if (GetevalutionIndex != null)
             {
                 GetevalutionIndex.AssignmentID = evalutionIndex.AssignmentID;
                 GetevalutionIndex.Remarks = evalutionIndex.Remarks;
@@ -194,15 +195,24 @@ namespace ProjectEvalutionSystem.Controllers
 
         [HttpGet]
         public async Task<ActionResult> StartEvaluation(int id)
-        { 
-            EvalutionIndex evalutionIndex = await db.EvalutionIndexes.Include(x=> x.Assignment).FirstOrDefaultAsync(x=> x.ID == id);
+        {
+            EvalutionIndex evalutionIndex = await db.EvalutionIndexes.Include(x => x.Assignment).FirstOrDefaultAsync(x => x.ID == id);
 
             Assignment assignment = evalutionIndex.Assignment;
 
-            var fileText = System.IO.File.ReadAllText(Path.Combine(Server.MapPath("~/App_Data/"), assignment.Path));
+            string fileText = string.Empty;
 
-             CheckPlagiarismResponse response = CheckPlagiarism.StartProcess(fileText, id);
-            
+            if (assignment.Path.Contains(".pdf"))
+            {
+                fileText = GetDocumentText(assignment.Path);
+            }
+            else if (assignment.Path.Contains(".txt"))
+            {
+                fileText = GetFileText(assignment.Path);
+            }
+
+            var response = CheckPlagiarism.StartProcess(fileText, id);
+
             ViewBag.PlagCount = response.PlagCount;
             ViewBag.UniqueCount = response.UniqueCount;
             ViewBag.Websites = response.matchingUrls;
@@ -216,6 +226,30 @@ namespace ProjectEvalutionSystem.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private string GetFileText(string path)
+        {
+            return System.IO.File.ReadAllText(Path.Combine(Server.MapPath("~/App_Data/"), path));
+        }
+        private string GetDocumentText(string path)
+        {
+            PdfToTextConverter pdfToTextConverter = new PdfToTextConverter();
+
+            pdfToTextConverter.LicenseKey = "ujQlNSAgNSU1IzslNSYkOyQnOywsLCw1JQ==";
+
+            pdfToTextConverter.Layout = TextLayout.OriginalLayout;
+            pdfToTextConverter.MarkPageBreaks = true;
+
+            try
+            {
+                string extractedText = pdfToTextConverter.ConvertToText(Path.Combine(Server.MapPath("~/App_Data/"), path));
+                return extractedText;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
