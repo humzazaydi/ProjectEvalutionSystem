@@ -20,11 +20,10 @@ namespace ProjectEvalutionSystem.Helper
         public static ChromeDriver _driver;
         public static CheckPlagiarismResponse StartProcess(string text,int evalutionIndexId)
         {
-            string chromeDriverDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                ConfigurationManager.AppSettings["seleniumBrowserDirectory"].ToString());
+            string chromeDriverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             var options = new ChromeOptions();
-            options.AddArguments(new List<string> { { "start-maximized" } });
+            options.AddArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox", "--disable-dev-shm-usage");
 
             _driver = new ChromeDriver(chromeDriverDirectory, options);
 

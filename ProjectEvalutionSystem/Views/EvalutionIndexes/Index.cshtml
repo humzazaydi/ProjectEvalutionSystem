@@ -112,7 +112,7 @@
                                             <div class="btn-group mr-2" role="group" aria-label="First group">
                                                 <a href="/EvalutionIndexes/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning m-1"><i class="la la-pencil"></i> Update</button></a>
                                                 <a href="/EvalutionIndexes/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger m-1"><i class="la la-trash"></i> Trash</button></a>
-                                                <a href="/EvalutionIndexes/StartEvaluation/@item.ID.ToString()"><button type="button" class="btn btn-outline-success m-1">Start Evaluation <i class="fas fa-arrow-right"></i></button></a>
+                                                <a href="#"><button type="button" id="btnStartEvaluation" data-id="@item.ID.ToString()" class="btn btn-outline-success m-1">Start Evaluation <i class="fas fa-arrow-right"></i></button></a>
                                             </div>
                                         </div>
                                     </td>
@@ -125,7 +125,7 @@
                                             <div class="btn-group mr-2" role="group" aria-label="First group">
                                                 <a href="/EvalutionIndexes/Edit/@item.ID.ToString()"><button type="button" class="btn btn-outline-warning m-1"><i class="la la-pencil"></i> Update</button></a>
                                                 <a href="/EvalutionIndexes/Delete/@item.ID.ToString()"><button type="button" class="btn btn-outline-danger m-1"><i class="la la-trash"></i> Trash</button></a>
-                                                <a href="/EvalutionIndexes/StartEvaluation/@item.ID.ToString()"><button type="button" class="btn btn-outline-success m-1">Start Evaluation <i class="fas fa-arrow-right"></i></button></a>
+                                                <a href="#"><button type="button" id="btnStartEvaluation" data-id="@item.ID.ToString()" class="btn btn-outline-success m-1">Start Evaluation <i class="fas fa-arrow-right"></i></button></a>
                                             </div>
                                         </div>
                                     </td>
@@ -140,5 +140,19 @@
         </div>
     </div>
 </div>
-
+@section Scripts{
+    <script>
+        $('#btnStartEvaluation').click(function (e) {
+            debugger;
+            e.preventDefault();
+            KTApp.block('#kt_content', {
+                overlayColor: '#000000',
+                state: 'primary',
+                message: 'Checking Plagiarism....'
+            });
+            var IdToProceed = $('#btnStartEvaluation').attr('data-id');
+            location.href = '/EvalutionIndexes/PlagiarismResults/' + IdToProceed;
+        })
+    </script>
+}
 

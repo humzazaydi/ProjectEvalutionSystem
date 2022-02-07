@@ -194,6 +194,7 @@ namespace ProjectEvalutionSystem.Controllers
         }
 
         [HttpGet]
+        [Route(template: "PlagiarismResults")]
         public async Task<ActionResult> StartEvaluation(int id)
         {
             EvalutionIndex evalutionIndex = await db.EvalutionIndexes.Include(x => x.Assignment).FirstOrDefaultAsync(x => x.ID == id);
@@ -207,6 +208,10 @@ namespace ProjectEvalutionSystem.Controllers
                 fileText = GetDocumentText(assignment.Path);
             }
             else if (assignment.Path.Contains(".txt"))
+            {
+                fileText = GetFileText(assignment.Path);
+            }
+            else
             {
                 fileText = GetFileText(assignment.Path);
             }
