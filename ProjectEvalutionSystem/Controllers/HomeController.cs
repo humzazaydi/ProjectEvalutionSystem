@@ -30,7 +30,7 @@ namespace ProjectEvalutionSystem.Controllers
         {
             try
             {
-                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                using (PESCF _context = new PESCF())
                 {
                     int _students = 0, _teachers = 0, _assignments = 0, _evalutionIndexes = 0, _courses = 0;
                     var sessionID = (int)Session["CurrentLoginId"];
@@ -80,7 +80,7 @@ namespace ProjectEvalutionSystem.Controllers
         {
             try
             {
-                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                using (PESCF _context = new PESCF())
                 {
                     IQueryable<Assignment> assignments = null;
                     var sessionID = (int)Session["CurrentLoginId"];
@@ -113,7 +113,7 @@ namespace ProjectEvalutionSystem.Controllers
         {
             try
             {
-                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                using (PESCF _context = new PESCF())
                 {
                     switch ((UserRole)input.user_role)
                     {
@@ -201,7 +201,7 @@ namespace ProjectEvalutionSystem.Controllers
         {
             try
             {
-                using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+                using (PESCF _context = new PESCF())
                 {
                     var currentLoginId = (int) Session["CurrentLoginId"];
                     switch ((UserRole)Session["UserRole"])

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +19,8 @@ namespace ProjectEvalutionSystem.Helper
     public class CheckPlagiarism
     {
         public static ChromeDriver _driver;
-        public static CheckPlagiarismResponse StartProcess(string text,int evalutionIndexId)
+        public async Task<CheckPlagiarismResponse> StartProcess(string text,int evalutionIndexId, string chromeDriverDirectory)
         {
-            string chromeDriverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
             var options = new ChromeOptions();
             options.AddArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox", "--disable-dev-shm-usage");
 
@@ -31,11 +30,8 @@ namespace ProjectEvalutionSystem.Helper
             string UniqueCount = string.Empty;
             string matchesText = string.Empty;
             string regexMatchesUrls = string.Empty;
-
             
-            
-
-            _driver.Navigate().GoToUrl(ConfigurationManager.AppSettings["PlagiarismCheckerURL"].ToString());
+            _driver.Navigate().GoToUrl(ConfigurationManager.AppSettings["PlagiarismCheckerURL"]);
             _driver.Manage().Window.Maximize();
 
             var textArea = _driver.FindElement(By.Id("textBox"));
@@ -44,7 +40,7 @@ namespace ProjectEvalutionSystem.Helper
             {
                 textArea.Clear();
                 textArea.SendKeys(text);
-                _driver.ExecuteScript("onSubmit()");
+                _driver.ExecuteAsyncScript("onSubmit()");
             }
 
             Thread.Sleep(5000);
@@ -88,9 +84,9 @@ namespace ProjectEvalutionSystem.Helper
             }
 
 
-            using (ProjectEvalutionSystemEntities _context = new ProjectEvalutionSystemEntities())
+            using (PESCF _context = new PESCF())
             {
-                var evalutionIndex = _context.EvalutionIndexes.Find(evalutionIndexId);
+                var evalutionIndex = await _context.EvalutionIndexes.FindAsync(evalutionIndexId);
                 evalutionIndex.Remarks = Convert.ToInt32(PlagCount) == 0 ? "Passed with 0% Plagiarism." : "Failed with " + Convert.ToInt32(PlagCount) + "% Plagiarism";
                 evalutionIndex.Comments = matchesText != "" ? "No sources found against your content.." : matchesText;
                 evalutionIndex.IsCompleted = true;
@@ -99,11 +95,12 @@ namespace ProjectEvalutionSystem.Helper
                 evalutionIndex.MatchesUrls = regexMatchesUrls;
 
                 _context.Entry(evalutionIndex).State = EntityState.Modified;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
 
             _driver.Close();
+            _driver.Dispose();
 
             return new CheckPlagiarismResponse
             {

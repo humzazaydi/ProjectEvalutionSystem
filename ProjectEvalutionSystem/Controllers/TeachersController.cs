@@ -14,7 +14,7 @@ namespace ProjectEvalutionSystem.Controllers
 {
     public class TeachersController : Controller
     {
-        private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
+        private PESCF db = new PESCF();
 
         // GET: Teachers
         public ActionResult Index()

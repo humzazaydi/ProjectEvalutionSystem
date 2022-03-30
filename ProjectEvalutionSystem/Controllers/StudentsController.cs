@@ -6,14 +6,17 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.SignalR;
+using ProjectEvalutionSystem.Helper;
 using ProjectEvalutionSystem.Models;
 using ProjectEvalutionSystem.Models.Auth;
+using ProjectEvalutionSystem.SignalR;
 
 namespace ProjectEvalutionSystem.Controllers
 {
     public class StudentsController : Controller
     {
-        private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
+        private PESCF db = new PESCF();
 
         // GET: Students
         public ActionResult Index()
@@ -25,18 +28,25 @@ namespace ProjectEvalutionSystem.Controllers
             }
 
             var sessionID = (int)Session["CurrentLoginId"];
+            List<Student> output = new List<Student>();
             switch ((UserRole)Session["UserRole"])
             {
                 case UserRole.Teacher:
-                    return View(db.Students.Where(x => x.TeacherID == sessionID).ToList());
+                    output = CacheManager.GetOrSet($"StudentList", GetStudents, "Students");
+                    return View(output.Where(x => x.TeacherID == sessionID).ToList());
 
                 case UserRole.SuperAdmin:
-                    return View(db.Students.ToList());
+                    output = CacheManager.GetOrSet($"StudentList", GetStudents, "Students");
+                    return View(output);
             }
 
             return View(new List<Student>());
         }
 
+        public List<Student> GetStudents()
+        {
+            return db.Students.ToList();
+        }
         // GET: Students/Create
         public ActionResult Create()
         {
@@ -80,6 +90,8 @@ namespace ProjectEvalutionSystem.Controllers
                 student.IsActive = true;
                 db.Students.Add(student);
                 db.SaveChanges();
+                var context = GlobalHost.ConnectionManager.GetHubContext<SignalHub>();
+                context.Clients.All.DataSet(GetStudents());
                 return RedirectToAction("Index");
             }
 

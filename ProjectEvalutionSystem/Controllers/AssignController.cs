@@ -14,7 +14,7 @@ namespace ProjectEvalutionSystem.Controllers
 {
     public class AssignController : Controller
     {
-        private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
+        private PESCF db = new PESCF();
         // GET: Assignments
         public ActionResult Index()
         {
