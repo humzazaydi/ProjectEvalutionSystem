@@ -17,7 +17,7 @@ namespace ProjectEvalutionSystem.Controllers
 {
     public class EvalutionIndexesController : Controller
     {
-        private PESCF db = new PESCF();
+        private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
 
         // GET: EvalutionIndexes
         public async Task<ActionResult> Index()
@@ -216,7 +216,7 @@ namespace ProjectEvalutionSystem.Controllers
                 fileText = GetFileText(assignment.Path);
             }
 
-            var response = await new CheckPlagiarism().StartProcess(fileText, id, ControllerContext.HttpContext.Server.MapPath("~"));
+            var response = CheckPlagiarism.StartProcess(fileText, id);
 
             ViewBag.PlagCount = response.PlagCount;
             ViewBag.UniqueCount = response.UniqueCount;

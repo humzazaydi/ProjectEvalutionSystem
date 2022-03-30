@@ -13,7 +13,7 @@ namespace ProjectEvalutionSystem.Controllers
 {
     public class AdminsController : Controller
     {
-        private PESCF db = new PESCF();
+        private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
 
         // GET: Admins
         public ActionResult Index()

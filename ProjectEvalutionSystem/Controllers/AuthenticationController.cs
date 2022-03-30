@@ -17,7 +17,7 @@ namespace ProjectEvalutionSystem.Controllers
 {
     public class AuthenticationController : Controller
     {
-        private PESCF db = new PESCF();
+        private ProjectEvalutionSystemEntities db = new ProjectEvalutionSystemEntities();
         // GET: Authentication
         public ActionResult GetIn()
         {
