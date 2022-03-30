@@ -12,6 +12,7 @@ using EvoPdf.PdfToText;
 using ProjectEvalutionSystem.Helper;
 using ProjectEvalutionSystem.Models;
 using ProjectEvalutionSystem.Models.Auth;
+using Spire.Doc;
 
 namespace ProjectEvalutionSystem.Controllers
 {
@@ -194,7 +195,6 @@ namespace ProjectEvalutionSystem.Controllers
         }
 
         [HttpGet]
-        [Route(template: "PlagiarismResults")]
         public async Task<ActionResult> StartEvaluation(int id)
         {
             EvalutionIndex evalutionIndex = await db.EvalutionIndexes.Include(x => x.Assignment).FirstOrDefaultAsync(x => x.ID == id);
@@ -211,12 +211,16 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 fileText = GetFileText(assignment.Path);
             }
+            else if (assignment.Path.Contains(".docx"))
+            {
+                fileText = GetWordText(assignment.Path);
+            }
             else
             {
                 fileText = GetFileText(assignment.Path);
             }
 
-            var response = CheckPlagiarism.StartProcess(fileText, id);
+            var response = CheckPlagiarism.StartProcess(fileText, id, GetBrowserPath());
 
             ViewBag.PlagCount = response.PlagCount;
             ViewBag.UniqueCount = response.UniqueCount;
@@ -237,6 +241,33 @@ namespace ProjectEvalutionSystem.Controllers
         {
             return System.IO.File.ReadAllText(Path.Combine(Server.MapPath("~/App_Data/"), path));
         }
+
+        public string GetWordText(string path)
+        {
+            var filename = "TEMP" + Guid.NewGuid() + ".txt";
+            //Open word document
+            Document document = new Document();
+            string docPath = Path.Combine(Server.MapPath("~/App_Data/"), path);
+
+            document.LoadFromFile(docPath);
+
+            //Save doc file.
+            document.SaveToFile(Path.Combine(Server.MapPath("~/App_Data/"), filename), FileFormat.Txt);
+
+            var response = System.IO.File.ReadAllText(Path.Combine(Server.MapPath("~/App_Data/"), filename));
+
+            var files = new DirectoryInfo(Server.MapPath("~/App_Data/")).GetFiles();
+            foreach (var file in files)
+            {
+                if (file.Name == filename)
+                {
+                    file.Delete();
+                }
+            }
+
+
+            return response;
+        }
         private string GetDocumentText(string path)
         {
             PdfToTextConverter pdfToTextConverter = new PdfToTextConverter();
@@ -255,6 +286,11 @@ namespace ProjectEvalutionSystem.Controllers
             {
                 throw ex;
             }
+        }
+
+        private string GetBrowserPath()
+        {
+            return Server.MapPath("~/Helper/Browser");
         }
     }
 }

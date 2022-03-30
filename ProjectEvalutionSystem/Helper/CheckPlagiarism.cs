@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,14 +19,12 @@ namespace ProjectEvalutionSystem.Helper
     public class CheckPlagiarism
     {
         public static ChromeDriver _driver;
-        public static CheckPlagiarismResponse StartProcess(string text,int evalutionIndexId)
+        public static CheckPlagiarismResponse StartProcess(string text,int evalutionIndexId, string browserDriverPath)
         {
-            string chromeDriverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
             var options = new ChromeOptions();
             options.AddArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox", "--disable-dev-shm-usage");
 
-            _driver = new ChromeDriver(chromeDriverDirectory, options);
+            _driver = new ChromeDriver(browserDriverPath, options);
 
             string PlagCount = string.Empty;
             string UniqueCount = string.Empty;
@@ -40,7 +39,7 @@ namespace ProjectEvalutionSystem.Helper
 
             var textArea = _driver.FindElement(By.Id("textBox"));
 
-            if (textArea.Displayed == true)
+            if (textArea.Displayed)
             {
                 textArea.Clear();
                 textArea.SendKeys(text);
